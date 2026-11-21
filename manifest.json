@@ -568,6 +568,49 @@
       }
     },
     {
+      "id": "musonius.rufus",
+      "author": "Musonius Rufus",
+      "title": "Lectures and Fragments",
+      "translator": "Blake Raymond",
+      "year": 2026,
+      "source": "https://archive.org/details/cmusoniirufirel00hensgoog",
+      "license_basis": "Translated by Blake Raymond from Otto Hense, C. Musonii Rufi Reliquiae (Teubner, Leipzig, 1905). Hense died in 1931, so the Greek edition is in the public domain in the United States and in Canada. Blake Raymond wrote this English translation and releases it to the public domain under CC0. This is not the Lutz (1947) or King (2011) translation. Hense's Latin preface, testimonia, critical apparatus, and notes are not included.",
+      "tier": "core",
+      "numbering": "Hense's 1905 numbering, also used by Lutz. Lectures I-XXI are musonius.rufus.N, with the split discourses as 13a, 13b, 15a, 15b, 18a, and 18b. Fragments XXII-LIII are musonius.rufus.22 through musonius.rufus.53 in one file. One file per lecture. The spurious Letter to Pancratides and the four letters in Philostratus are omitted.",
+      "files": [
+        "texts/musonius-rufus/lectures/lecture-01.md",
+        "texts/musonius-rufus/lectures/lecture-02.md",
+        "texts/musonius-rufus/lectures/lecture-03.md",
+        "texts/musonius-rufus/lectures/lecture-04.md",
+        "texts/musonius-rufus/lectures/lecture-05.md",
+        "texts/musonius-rufus/lectures/lecture-06.md",
+        "texts/musonius-rufus/lectures/lecture-07.md",
+        "texts/musonius-rufus/lectures/lecture-08.md",
+        "texts/musonius-rufus/lectures/lecture-09.md",
+        "texts/musonius-rufus/lectures/lecture-10.md",
+        "texts/musonius-rufus/lectures/lecture-11.md",
+        "texts/musonius-rufus/lectures/lecture-12.md",
+        "texts/musonius-rufus/lectures/lecture-13a.md",
+        "texts/musonius-rufus/lectures/lecture-13b.md",
+        "texts/musonius-rufus/lectures/lecture-14.md",
+        "texts/musonius-rufus/lectures/lecture-15a.md",
+        "texts/musonius-rufus/lectures/lecture-15b.md",
+        "texts/musonius-rufus/lectures/lecture-16.md",
+        "texts/musonius-rufus/lectures/lecture-17.md",
+        "texts/musonius-rufus/lectures/lecture-18a.md",
+        "texts/musonius-rufus/lectures/lecture-18b.md",
+        "texts/musonius-rufus/lectures/lecture-19.md",
+        "texts/musonius-rufus/lectures/lecture-20.md",
+        "texts/musonius-rufus/lectures/lecture-21.md",
+        "texts/musonius-rufus/fragments/fragments.md"
+      ],
+      "word_count": 21034,
+      "tokens": {
+        "o200k_base": 25638,
+        "cl100k_base": 25730
+      }
+    },
+    {
       "id": "cicero.de_finibus.3",
       "author": "Cicero",
       "title": "On Ends, book 3",
@@ -698,13 +741,6 @@
   ],
   "missing": [
     {
-      "id": "musonius.rufus",
-      "author": "Musonius Rufus",
-      "title": "Lectures and fragments",
-      "tier": "core",
-      "reason": "No English translation is verifiably public domain in both the United States and Canada. The first complete English translation is Cora E. Lutz, Yale Classical Studies 10 (1947). If that copyright was renewed, the United States term runs to 2042, and non-renewal was not verified from Copyright Office records for this corpus. Lutz's death date was also not established, so Canadian public-domain status under life-plus-70 could not be shown, and the 1947 publication was not already in the Canadian public domain before the 2022 extension on any basis verified here. Cynthia King's 2011 translation is in copyright. An Internet Archive \"Public Domain Mark\" and a non-renewal claim on a third-party site were not treated as enough.\n"
-    },
-    {
       "id": "cleomedes.caelestia",
       "author": "Cleomedes",
       "title": "On the Heavens",
@@ -728,12 +764,12 @@
   ],
   "totals": {
     "core": {
-      "works": 17,
-      "files": 254,
-      "word_count": 618594,
+      "works": 18,
+      "files": 279,
+      "word_count": 639628,
       "tokens": {
-        "o200k_base": 751005,
-        "cl100k_base": 754717
+        "o200k_base": 776643,
+        "cl100k_base": 780447
       }
     },
     "foundations": {
@@ -755,12 +791,12 @@
       }
     },
     "all": {
-      "works": 23,
-      "files": 274,
-      "word_count": 835452,
+      "works": 24,
+      "files": 299,
+      "word_count": 856486,
       "tokens": {
-        "o200k_base": 1032898,
-        "cl100k_base": 1038414
+        "o200k_base": 1058536,
+        "cl100k_base": 1064144
       }
     }
   }

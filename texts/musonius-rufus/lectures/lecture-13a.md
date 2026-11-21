@@ -1,0 +1,7 @@
+---
+id: musonius.rufus.13a
+---
+
+# XIII A. What is the chief end of marriage
+
+Marriage, he said, has as its chief end a partnership of life and the procreation of children. The man who marries and the woman who is married must come together for this, to live together and to produce children, and to regard everything as held in common and nothing as private, not even the body itself. The birth of a human being is a great thing, and this union brings it about. But that is not yet sufficient for those who marry, since it could come about even without marriage, by union in some other way, as animals unite. In marriage there must be above all a life together and mutual care of husband and wife, in health and in sickness and in every circumstance, since both come to marriage eager for this as much as for the begetting of children. Where this mutual care is complete, and those who live together offer it to each other entirely, vying to outdo one another, this marriage is as it should be and is admirable; for such a partnership is beautiful. But where each looks only to his own interest and neglects the other, or, by Zeus, one of them behaves this way, and where the one lives in the same house but his mind looks elsewhere, not wishing to pull together with his partner or live in harmony, then the partnership is of necessity ruined and the marriage goes badly for those living together; either they separate altogether from each other, or they have a life together worse than solitude.

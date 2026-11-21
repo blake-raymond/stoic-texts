@@ -89,10 +89,12 @@ def test_required_works_and_no_boilerplate():
         "diogenes.lives.7",
         "cleanthes.hymn_to_zeus",
         "seneca.naturales_quaestiones",
+        "musonius.rufus",
     ):
         assert required in ids
     missing = {item["id"] for item in catalog["missing"]}
-    assert {"musonius.rufus", "cleomedes.caelestia", "early_stoic.fragments", "cicero.de_fato"} <= missing
+    assert {"cleomedes.caelestia", "early_stoic.fragments", "cicero.de_fato"} <= missing
+    assert "musonius.rufus" not in missing
     tiers = {work["id"]: work["tier"] for work in catalog["works"]}
     assert tiers["seneca.naturales_quaestiones"] == "optional"
     assert tiers["cicero.de_finibus.3"] == "foundations"
@@ -156,6 +158,14 @@ def test_edition_shape_and_openings():
         assert len(chapters) == count
         assert "NOTES ON SENECA" not in text
     assert "Lucilius" in (TEXT_ROOT / "seneca" / "natural-questions" / "book-01.md").read_text(encoding="utf-8")
+
+    mus_lectures = list((TEXT_ROOT / "musonius-rufus" / "lectures").glob("lecture-*.md"))
+    assert len(mus_lectures) == 24
+    mus_fr = (TEXT_ROOT / "musonius-rufus" / "fragments" / "fragments.md").read_text(encoding="utf-8")
+    mus_ids = SECTION_RE.findall(mus_fr)
+    assert mus_ids == [f"musonius.rufus.{n}" for n in range(22, 54)]
+    assert "provided that point is sound" in (TEXT_ROOT / "musonius-rufus" / "lectures" / "lecture-01.md").read_text(encoding="utf-8")
+
 
 
 def test_passage_ids_are_unique():

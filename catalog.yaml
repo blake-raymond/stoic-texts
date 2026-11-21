@@ -347,6 +347,32 @@ works:
       revived. The Standard Ebooks transcription and markup are dedicated to
       the public domain under CC0. Introductions and notes are not included.
 
+
+  - id: musonius.rufus
+    author: Musonius Rufus
+    title: Lectures and Fragments
+    translator: Blake Raymond
+    year: 2026
+    source: https://archive.org/details/cmusoniirufirel00hensgoog
+    tier: core
+    files:
+      - texts/musonius-rufus/lectures/lecture-*.md
+      - texts/musonius-rufus/fragments/fragments.md
+    numbering: >
+      Hense's 1905 numbering, also used by Lutz. Lectures I-XXI are
+      musonius.rufus.N, with the split discourses as 13a, 13b, 15a, 15b,
+      18a, and 18b. Fragments XXII-LIII are musonius.rufus.22 through
+      musonius.rufus.53 in one file. One file per lecture. The spurious
+      Letter to Pancratides and the four letters in Philostratus are
+      omitted.
+    license_basis: >
+      Translated by Blake Raymond from Otto Hense, C. Musonii Rufi
+      Reliquiae (Teubner, Leipzig, 1905). Hense died in 1931, so the
+      Greek edition is in the public domain in the United States and in
+      Canada. Blake Raymond wrote this English translation and releases
+      it to the public domain under CC0. This is not the Lutz (1947) or
+      King (2011) translation. Hense's Latin preface, testimonia,
+      critical apparatus, and notes are not included.
   - id: cicero.de_finibus.3
     author: Cicero
     title: On Ends, book 3
@@ -496,22 +522,6 @@ works:
       optional physics text.
 
 missing:
-  - id: musonius.rufus
-    author: Musonius Rufus
-    title: Lectures and fragments
-    tier: core
-    reason: >
-      No English translation is verifiably public domain in both the United
-      States and Canada. The first complete English translation is Cora E.
-      Lutz, Yale Classical Studies 10 (1947). If that copyright was renewed,
-      the United States term runs to 2042, and non-renewal was not verified
-      from Copyright Office records for this corpus. Lutz's death date was
-      also not established, so Canadian public-domain status under life-plus-70
-      could not be shown, and the 1947 publication was not already in the
-      Canadian public domain before the 2022 extension on any basis verified
-      here. Cynthia King's 2011 translation is in copyright. An Internet
-      Archive "Public Domain Mark" and a non-renewal claim on a third-party
-      site were not treated as enough.
 
   - id: cleomedes.caelestia
     author: Cleomedes

@@ -11,7 +11,7 @@ One translation is included per work. The text files contain the translation onl
 - Marcus Aurelius, *Meditations*
 - Epictetus, *Discourses*, *Encheiridion*, and fragments
 - Seneca, all 124 *Moral Letters to Lucilius*; the moral dialogues and consolations; *On Benefits*; *On Clemency*
-- Musonius Rufus was in scope and is missing. See below.
+- Musonius Rufus, *Lectures and Fragments*
 
 **Foundations.** Ancient reports that supply the ethical foundations, not a general library of Hellenistic philosophy:
 
@@ -80,7 +80,8 @@ Word counts are Unicode letter-runs in each file as stored, including the id lin
 | core | Seneca | To Polybius, on Consolation | Aubrey Stewart | 1889 | 9,325 | 11,060 | 11,119 |
 | core | Seneca | On Clemency | Aubrey Stewart | 1889 | 14,477 | 17,388 | 17,476 |
 | core | Seneca | On Benefits | Aubrey Stewart | 1887 | 81,547 | 98,262 | 98,506 |
-| **core total** | 17 works | 254 files |  |  | 618,594 | 751,005 | 754,717 |
+| core | Musonius Rufus | Lectures and Fragments | Blake Raymond | 2026 | 21,034 | 25,638 | 25,730 |
+| **core total** | 18 works | 279 files |  |  | 639,628 | 776,643 | 780,447 |
 | foundations | Cicero | On Ends, book 3 | C. D. Yonge | 1875 | 13,464 | 16,135 | 16,317 |
 | foundations | Cicero | On Duties | Walter Miller | 1913 | 67,670 | 93,960 | 94,639 |
 | foundations | Cicero | On the Nature of the Gods, book 2 | C. D. Yonge | 1877 | 22,427 | 28,344 | 28,479 |
@@ -89,7 +90,7 @@ Word counts are Unicode letter-runs in each file as stored, including the id lin
 | **foundations total** | 5 works | 13 files |  |  | 135,408 | 182,592 | 183,845 |
 | optional | Seneca | Natural Questions | John Clarke | 1910 | 81,450 | 99,301 | 99,852 |
 | **optional total** | 1 work | 7 files |  |  | 81,450 | 99,301 | 99,852 |
-| **corpus total** | 23 works | 274 files |  |  | 835,452 | 1,032,898 | 1,038,414 |
+| **corpus total** | 24 works | 299 files |  |  | 856,486 | 1,058,536 | 1,064,144 |
 
 <!-- COUNTS:END -->
 
@@ -114,7 +115,6 @@ Judgment calls, stated so they can be checked:
 - **On the Nature of the Gods** is the 1877 Harper text, "literally translated, chiefly by C. D. Yonge," revising an earlier version sometimes ascribed to Franklin. Both layers are public domain. Yonge is the translator of record.
 - **Standard Ebooks** dedicates its own transcription and markup to CC0. The underlying wording is the named public-domain translation. Where a Standard Ebooks file is the source, the orthography is that transcription's. Standard Ebooks attests United States public-domain status; the Canadian analysis above is this corpus's, not theirs.
 - **Project Gutenberg** files had the Gutenberg header, footer, and trademark language removed, which is what the Gutenberg license requires when its boilerplate is stripped. Gutenberg ebook numbers are cited only in `catalog.yaml` and `manifest.json`, not in the text files.
-- **Musonius Rufus** is excluded. The first complete English translation is Cora E. Lutz, *Yale Classical Studies* 10 (1947). Renewal was not verified from Copyright Office records, so a United States term running to 2042 could not be ruled out. Lutz's death date was not established, so Canadian status could not be shown either. An Internet Archive "Public Domain Mark" was not treated as sufficient. Cynthia King's 2011 translation is in copyright.
 - **Perseus** markup is often under a share-alike license. Those editions were not used, so this repository can stay CC0 without dragging a share-alike obligation onto the texts.
 
 `LICENSE` is the CC0 1.0 legal text. CC0 covers the original work in this repository: the selection, the file structure, the passage ids, the scripts, the schema, the heuristic tags, and this README. CC0 does not change the status of the translations. Those remain public domain for the reasons in each manifest entry. Anyone may copy the repository. Attribution of the translators is recorded in the manifest and is the right scholarly practice even where the law does not require it.
@@ -123,7 +123,6 @@ Judgment calls, stated so they can be checked:
 
 | Work | Why it is not here |
 | --- | --- |
-| Musonius Rufus, lectures and fragments | No English translation verifiably public domain in both the United States and Canada. Lutz (1947) was not verified as public domain; King (2011) is in copyright. |
 | Cleomedes, *On the Heavens* | Optional. The first complete English translation, Bowen and Todd (2004), is in copyright. No earlier complete English text was found at Gutenberg, Wikisource, or Perseus. |
 | Collected early Stoic fragments | Von Arnim is Greek and Latin. Long and Sedley (1987) and Inwood and Gerson are in copyright. No public-domain English collection was found. |
 | Cicero, *On Fate* | Yonge's translation is public domain but was found only as a page scan. This corpus does not ship OCR. Fate is still discussed in *On the Nature of the Gods* book 2, *On Ends* book 3, and Diogenes book 7. |
