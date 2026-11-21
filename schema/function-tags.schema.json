@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/blake-raymond/stoic-texts/schema/function-tags.schema.json",
+  "title": "Stoic passage function tag",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "work_id", "tags", "method", "status", "origin", "signals"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "work_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tags": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "ethical_claim",
+          "psychology",
+          "human_nature",
+          "cosmic_justification",
+          "natural_science"
+        ]
+      }
+    },
+    "method": {
+      "const": "keyword_heuristic"
+    },
+    "status": {
+      "const": "unreviewed"
+    },
+    "origin": {
+      "const": "auto"
+    },
+    "signals": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

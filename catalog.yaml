@@ -1,0 +1,552 @@
+# Bibliographic source for the corpus. Word and token counts are not stored
+# here. scripts/count_tokens.py writes them to manifest.json and the README.
+schema_version: 1
+works:
+  - id: marcus.meditations
+    author: Marcus Aurelius
+    title: Meditations
+    translator: George Long
+    year: 1862
+    source: https://standardebooks.org/ebooks/marcus-aurelius/meditations/george-long
+    tier: core
+    files:
+      - texts/marcus-aurelius/meditations/book-*.md
+    numbering: >
+      Paragraph numbers in this transcription of Long, not the traditional
+      section numbers. Several books therefore have a different count from
+      the usual sections; book 4 has 54 paragraphs. Books 1 and 2 end with a
+      place-note, marcus.meditations.1.place and marcus.meditations.2.place.
+    license_basis: >
+      George Long's translation was published in 1862. In the United States
+      every work published in 1930 or earlier is in the public domain. Long
+      died in 1879, so in Canada the life-plus-50 term had expired long before
+      the 30 December 2022 extension to life-plus-70, and the copyright was
+      not revived. The Standard Ebooks transcription and markup are dedicated
+      to the public domain under CC0. This is Long's translation, not Meric
+      Casaubon's. Introductions and notes are not included.
+
+  - id: epictetus.discourses
+    author: Epictetus
+    title: Discourses
+    translator: George Long
+    year: 1877
+    source: https://standardebooks.org/ebooks/epictetus/discourses/george-long
+    tier: core
+    files:
+      - texts/epictetus/discourses/book-01/chapter-*.md
+      - texts/epictetus/discourses/book-02/chapter-*.md
+      - texts/epictetus/discourses/book-03/chapter-*.md
+      - texts/epictetus/discourses/book-04/chapter-*.md
+    numbering: >
+      One file per chapter, id epictetus.discourses.B.C, using Long's chapter
+      division. The books have 30, 26, 26, and 13 chapters.
+    license_basis: >
+      George Long's translation was published in 1877. In the United States
+      every work published in 1930 or earlier is in the public domain. Long
+      died in 1879, so in Canada the life-plus-50 term had expired long before
+      the 30 December 2022 extension to life-plus-70, and the copyright was
+      not revived. The Standard Ebooks transcription and markup are dedicated
+      to the public domain under CC0. The Project Gutenberg selection of the
+      Discourses was not used. Introductions and notes are not included.
+
+  - id: epictetus.enchiridion
+    author: Epictetus
+    title: Encheiridion
+    translator: George Long
+    year: 1877
+    source: https://en.wikisource.org/wiki/The_Discourses_of_Epictetus;_with_the_Encheiridion_and_Fragments/The_Encheiridion_or_Manual
+    tier: core
+    files:
+      - texts/epictetus/enchiridion/enchiridion.md
+    numbering: >
+      Fifty-two chapters, Long's 1877 numbering. This edition is not divided
+      into 53 chapters. Ids are epictetus.enchiridion.N.
+    license_basis: >
+      George Long's translation was published in 1877 in The Discourses of
+      Epictetus, with the Encheiridion and Fragments. In the United States
+      every work published in 1930 or earlier is in the public domain. Long
+      died in 1879, so in Canada the life-plus-50 term had expired long before
+      the 30 December 2022 extension to life-plus-70, and the copyright was
+      not revived. The text is the Wikisource transcription of that edition.
+      Wikisource footnote markers and the footnotes section were removed.
+
+  - id: epictetus.fragments
+    author: Epictetus
+    title: Fragments
+    translator: George Long
+    year: 1877
+    source: https://en.wikisource.org/wiki/The_Discourses_of_Epictetus;_with_the_Encheiridion_and_Fragments/Fragments
+    tier: core
+    files:
+      - texts/epictetus/fragments/fragments.md
+    numbering: >
+      Long's fragment numbers. Fragments 179, 180, and 181 are omitted because
+      that edition gives them only in Latin. Ids run epictetus.fragments.1
+      through epictetus.fragments.178.
+    license_basis: >
+      George Long's translation was published in 1877 in The Discourses of
+      Epictetus, with the Encheiridion and Fragments. In the United States
+      every work published in 1930 or earlier is in the public domain. Long
+      died in 1879, so in Canada the life-plus-50 term had expired long before
+      the 30 December 2022 extension to life-plus-70, and the copyright was
+      not revived. The text is the Wikisource transcription of that edition.
+      Long's editorial introduction to the fragments, footnote markers, and
+      the footnotes section were removed. Fragments that Long left in Latin
+      without an English rendering are not included.
+
+  - id: seneca.letters
+    author: Seneca
+    title: Moral Letters to Lucilius
+    translator: Richard Mott Gummere
+    year: 1925
+    source: https://standardebooks.org/ebooks/seneca/moral-letters-to-lucilius/richard-m-gummere
+    tier: core
+    files:
+      - texts/seneca/letters/letter-*.md
+    numbering: >
+      All 124 letters, one file each. The file id is seneca.letters.N. The
+      Loeb volumes were published in 1917 (letters 1-65), 1920 (66-92), and
+      1925 (93-124). The year field is the last of those volumes.
+    license_basis: >
+      Richard Mott Gummere's Loeb translation was published in 1917, 1920,
+      and 1925, all before the 1930 United States public-domain cutoff. Gummere
+      died on 3 December 1969. Under the Canadian life-plus-50 term then in
+      force, the copyright expired on 31 December 2019, before the 30 December
+      2022 extension to life-plus-70, and was not revived. The Standard Ebooks
+      transcription and markup are dedicated to the public domain under CC0.
+      Introductions and notes are not included.
+
+  - id: seneca.de_providentia
+    author: Seneca
+    title: On Providence
+    translator: Aubrey Stewart
+    year: 1889
+    source: https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart
+    tier: core
+    files:
+      - texts/seneca/de-providentia/de-providentia.md
+    numbering: >
+      Stewart's sections, id seneca.de_providentia.N.
+    license_basis: >
+      Aubrey Stewart's translation of the minor dialogues, including On
+      Providence and On Clemency, was published in 1889. On Benefits was
+      published in 1887. Both are before the 1930 United States public-domain
+      cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had
+      expired long before the 30 December 2022 extension to life-plus-70, and
+      the copyright was not revived. The Standard Ebooks transcription and
+      markup are dedicated to the public domain under CC0. Introductions and
+      notes are not included.
+
+  - id: seneca.de_constantia
+    author: Seneca
+    title: On the Firmness of the Wise Person
+    translator: Aubrey Stewart
+    year: 1889
+    source: https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart
+    tier: core
+    files:
+      - texts/seneca/de-constantia/de-constantia.md
+    numbering: >
+      Stewart's sections, id seneca.de_constantia.N.
+    license_basis: >
+      Aubrey Stewart's translation was published in 1889, before the 1930
+      United States public-domain cutoff. Stewart died in 1918, so in Canada
+      the life-plus-50 term had expired long before the 30 December 2022
+      extension to life-plus-70, and the copyright was not revived. The
+      Standard Ebooks transcription and markup are dedicated to the public
+      domain under CC0. Introductions and notes are not included.
+
+  - id: seneca.de_ira
+    author: Seneca
+    title: On Anger
+    translator: Aubrey Stewart
+    year: 1889
+    source: https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart
+    tier: core
+    files:
+      - texts/seneca/de-ira/book-*.md
+    numbering: >
+      Three books. Ids are seneca.de_ira.B.S, using Stewart's sections.
+    license_basis: >
+      Aubrey Stewart's translation was published in 1889, before the 1930
+      United States public-domain cutoff. Stewart died in 1918, so in Canada
+      the life-plus-50 term had expired long before the 30 December 2022
+      extension to life-plus-70, and the copyright was not revived. The
+      Standard Ebooks transcription and markup are dedicated to the public
+      domain under CC0. Introductions and notes are not included.
+
+  - id: seneca.consolatio_ad_marciam
+    author: Seneca
+    title: To Marcia, on Consolation
+    translator: Aubrey Stewart
+    year: 1889
+    source: https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart
+    tier: core
+    files:
+      - texts/seneca/consolatio-ad-marciam/consolatio-ad-marciam.md
+    numbering: >
+      Stewart's sections, id seneca.consolatio_ad_marciam.N.
+    license_basis: >
+      Aubrey Stewart's translation was published in 1889, before the 1930
+      United States public-domain cutoff. Stewart died in 1918, so in Canada
+      the life-plus-50 term had expired long before the 30 December 2022
+      extension to life-plus-70, and the copyright was not revived. The
+      Standard Ebooks transcription and markup are dedicated to the public
+      domain under CC0. Introductions and notes are not included.
+
+  - id: seneca.de_vita_beata
+    author: Seneca
+    title: On the Happy Life
+    translator: Aubrey Stewart
+    year: 1889
+    source: https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart
+    tier: core
+    files:
+      - texts/seneca/de-vita-beata/de-vita-beata.md
+    numbering: >
+      Stewart's sections, id seneca.de_vita_beata.N.
+    license_basis: >
+      Aubrey Stewart's translation was published in 1889, before the 1930
+      United States public-domain cutoff. Stewart died in 1918, so in Canada
+      the life-plus-50 term had expired long before the 30 December 2022
+      extension to life-plus-70, and the copyright was not revived. The
+      Standard Ebooks transcription and markup are dedicated to the public
+      domain under CC0. Introductions and notes are not included.
+
+  - id: seneca.de_otio
+    author: Seneca
+    title: On Leisure
+    translator: Aubrey Stewart
+    year: 1889
+    source: https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart
+    tier: core
+    files:
+      - texts/seneca/de-otio/de-otio.md
+    numbering: >
+      Stewart's sections, id seneca.de_otio.N. The work is fragmentary.
+    license_basis: >
+      Aubrey Stewart's translation was published in 1889, before the 1930
+      United States public-domain cutoff. Stewart died in 1918, so in Canada
+      the life-plus-50 term had expired long before the 30 December 2022
+      extension to life-plus-70, and the copyright was not revived. The
+      Standard Ebooks transcription and markup are dedicated to the public
+      domain under CC0. Introductions and notes are not included.
+
+  - id: seneca.de_tranquillitate
+    author: Seneca
+    title: On Peace of Mind
+    translator: Aubrey Stewart
+    year: 1889
+    source: https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart
+    tier: core
+    files:
+      - texts/seneca/de-tranquillitate/de-tranquillitate.md
+    numbering: >
+      Stewart's sections, id seneca.de_tranquillitate.N.
+    license_basis: >
+      Aubrey Stewart's translation was published in 1889, before the 1930
+      United States public-domain cutoff. Stewart died in 1918, so in Canada
+      the life-plus-50 term had expired long before the 30 December 2022
+      extension to life-plus-70, and the copyright was not revived. The
+      Standard Ebooks transcription and markup are dedicated to the public
+      domain under CC0. Introductions and notes are not included.
+
+  - id: seneca.de_brevitate_vitae
+    author: Seneca
+    title: On the Shortness of Life
+    translator: Aubrey Stewart
+    year: 1889
+    source: https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart
+    tier: core
+    files:
+      - texts/seneca/de-brevitate-vitae/de-brevitate-vitae.md
+    numbering: >
+      Stewart's sections, id seneca.de_brevitate_vitae.N.
+    license_basis: >
+      Aubrey Stewart's translation was published in 1889, before the 1930
+      United States public-domain cutoff. Stewart died in 1918, so in Canada
+      the life-plus-50 term had expired long before the 30 December 2022
+      extension to life-plus-70, and the copyright was not revived. The
+      Standard Ebooks transcription and markup are dedicated to the public
+      domain under CC0. Introductions and notes are not included.
+
+  - id: seneca.consolatio_ad_helviam
+    author: Seneca
+    title: To Helvia, on Consolation
+    translator: Aubrey Stewart
+    year: 1889
+    source: https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart
+    tier: core
+    files:
+      - texts/seneca/consolatio-ad-helviam/consolatio-ad-helviam.md
+    numbering: >
+      Stewart's sections, id seneca.consolatio_ad_helviam.N.
+    license_basis: >
+      Aubrey Stewart's translation was published in 1889, before the 1930
+      United States public-domain cutoff. Stewart died in 1918, so in Canada
+      the life-plus-50 term had expired long before the 30 December 2022
+      extension to life-plus-70, and the copyright was not revived. The
+      Standard Ebooks transcription and markup are dedicated to the public
+      domain under CC0. Introductions and notes are not included.
+
+  - id: seneca.consolatio_ad_polybium
+    author: Seneca
+    title: To Polybius, on Consolation
+    translator: Aubrey Stewart
+    year: 1889
+    source: https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart
+    tier: core
+    files:
+      - texts/seneca/consolatio-ad-polybium/consolatio-ad-polybium.md
+    numbering: >
+      Stewart's sections, id seneca.consolatio_ad_polybium.N.
+    license_basis: >
+      Aubrey Stewart's translation was published in 1889, before the 1930
+      United States public-domain cutoff. Stewart died in 1918, so in Canada
+      the life-plus-50 term had expired long before the 30 December 2022
+      extension to life-plus-70, and the copyright was not revived. The
+      Standard Ebooks transcription and markup are dedicated to the public
+      domain under CC0. Introductions and notes are not included.
+
+  - id: seneca.de_clementia
+    author: Seneca
+    title: On Clemency
+    translator: Aubrey Stewart
+    year: 1889
+    source: https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart
+    tier: core
+    files:
+      - texts/seneca/de-clementia/book-*.md
+    numbering: >
+      Two books. Ids are seneca.de_clementia.B.S, using Stewart's sections.
+      The work is incomplete.
+    license_basis: >
+      Aubrey Stewart's translation was published in 1889, before the 1930
+      United States public-domain cutoff. Stewart died in 1918, so in Canada
+      the life-plus-50 term had expired long before the 30 December 2022
+      extension to life-plus-70, and the copyright was not revived. The
+      Standard Ebooks transcription and markup are dedicated to the public
+      domain under CC0. Introductions and notes are not included.
+
+  - id: seneca.de_beneficiis
+    author: Seneca
+    title: On Benefits
+    translator: Aubrey Stewart
+    year: 1887
+    source: https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart
+    tier: core
+    files:
+      - texts/seneca/de-beneficiis/book-*.md
+    numbering: >
+      Seven books. Ids are seneca.de_beneficiis.B.S, using Stewart's sections.
+    license_basis: >
+      Aubrey Stewart's translation of On Benefits was published in 1887,
+      before the 1930 United States public-domain cutoff. Stewart died in
+      1918, so in Canada the life-plus-50 term had expired long before the
+      30 December 2022 extension to life-plus-70, and the copyright was not
+      revived. The Standard Ebooks transcription and markup are dedicated to
+      the public domain under CC0. Introductions and notes are not included.
+
+  - id: cicero.de_finibus.3
+    author: Cicero
+    title: On Ends, book 3
+    translator: C. D. Yonge
+    year: 1875
+    source: https://www.gutenberg.org/ebooks/29247
+    tier: foundations
+    files:
+      - texts/cicero/de-finibus/book-03.md
+    numbering: >
+      Yonge's chapters of book 3 only, id cicero.de_finibus.3.N. These are
+      not the modern Latin section numbers 3.1-3.76. Books 1, 2, 4, and 5
+      are not included. Book 3 is Cato's account of Stoic ethics.
+    license_basis: >
+      C. D. Yonge's translation, in the 1875 Bell printing of the Bohn
+      volume, is before the 1930 United States public-domain cutoff. Yonge
+      died in 1891, so in Canada the life-plus-50 term had expired long
+      before the 30 December 2022 extension to life-plus-70, and the copyright
+      was not revived. Taken from Project Gutenberg ebook 29247. The Gutenberg
+      header, footer, and trademark language have been removed. Only book 3
+      is included.
+
+  - id: cicero.de_officiis
+    author: Cicero
+    title: On Duties
+    translator: Walter Miller
+    year: 1913
+    source: https://www.gutenberg.org/ebooks/47001
+    tier: foundations
+    files:
+      - texts/cicero/de-officiis/book-*.md
+    numbering: >
+      Cicero's standard section numbers. Book 1 has sections 1-161, book 2
+      has 1-89, and book 3 has 1-121. Ids are cicero.de_officiis.B.S. The
+      facing Latin and the textual apparatus are not included.
+    license_basis: >
+      Walter Miller's Loeb translation was published in 1913, before the 1930
+      United States public-domain cutoff. Miller died on 28 July 1949. Under
+      the Canadian life-plus-50 term then in force, the copyright expired at
+      the end of 1999, before the 30 December 2022 extension to life-plus-70,
+      and was not revived. Taken from Project Gutenberg ebook 47001. The
+      Gutenberg header, footer, and trademark language have been removed, and
+      so have the Latin text, apparatus, and marginal headings.
+
+  - id: cicero.de_natura_deorum.2
+    author: Cicero
+    title: On the Nature of the Gods, book 2
+    translator: C. D. Yonge
+    year: 1877
+    source: https://www.gutenberg.org/ebooks/14988
+    tier: foundations
+    files:
+      - texts/cicero/de-natura-deorum/book-02.md
+    numbering: >
+      Yonge's chapters of book 2 only, id cicero.de_natura_deorum.2.N. These
+      are not the modern Latin section numbers. Books 1 and 3, the Epicurean
+      and Academic speeches, are not included. Book 2 is Balbus's Stoic account.
+    license_basis: >
+      The 1877 Harper edition is described on its title page as literally
+      translated, chiefly by C. D. Yonge. It revises an earlier English version
+      sometimes ascribed to Franklin. Both the revision and that earlier
+      version are public domain. Publication in 1877 is before the 1930 United
+      States cutoff. Yonge died in 1891, so in Canada the life-plus-50 term
+      had expired long before the 30 December 2022 extension to life-plus-70,
+      and the copyright was not revived. Taken from Project Gutenberg ebook
+      14988. The Gutenberg header, footer, trademark language, and bracketed
+      footnote markers were removed. Only book 2 is included.
+
+  - id: diogenes.lives.7
+    author: Diogenes Laertius
+    title: Lives of the Eminent Philosophers, book 7
+    translator: C. D. Yonge
+    year: 1853
+    source: https://standardebooks.org/ebooks/diogenes-laertius/the-lives-and-opinions-of-eminent-philosophers/c-d-yonge
+    tier: foundations
+    files:
+      - texts/diogenes-laertius/book-7/zeno.md
+      - texts/diogenes-laertius/book-7/ariston.md
+      - texts/diogenes-laertius/book-7/herillus.md
+      - texts/diogenes-laertius/book-7/dionysius.md
+      - texts/diogenes-laertius/book-7/cleanthes.md
+      - texts/diogenes-laertius/book-7/sphaerus.md
+      - texts/diogenes-laertius/book-7/chrysippus.md
+    numbering: >
+      Paragraph numbers within each life in this transcription, not the
+      standard 7.1-style section numbers. The lives are Zeno, Ariston,
+      Herillus, Dionysius, Cleanthes, Sphaerus, and Chrysippus. The other
+      books of Diogenes are not included.
+    license_basis: >
+      C. D. Yonge's translation was published in 1853, before the 1930 United
+      States public-domain cutoff. Yonge died in 1891, so in Canada the
+      life-plus-50 term had expired long before the 30 December 2022 extension
+      to life-plus-70, and the copyright was not revived. The Standard Ebooks
+      transcription and markup are dedicated to the public domain under CC0.
+      Only book 7 is included. Introductions and notes are not included.
+      Perseus editions were not used, because their markup is often under a
+      share-alike license that does not sit cleanly with a CC0 repository.
+
+  - id: cleanthes.hymn_to_zeus
+    author: Cleanthes
+    title: Hymn to Zeus
+    translator: E. H. Blakeney
+    year: 1921
+    source: https://en.wikisource.org/wiki/The_Hymn_of_Cleanthes
+    tier: foundations
+    files:
+      - texts/cleanthes/hymn-to-zeus/hymn.md
+    numbering: >
+      One passage, the English poem. The Greek, the argument, and the notes
+      are not included. Line numbers printed in the Wikisource transcription
+      were removed.
+    license_basis: >
+      E. H. Blakeney's verse translation was published in 1921, before the
+      1930 United States public-domain cutoff. Blakeney died in August 1955.
+      Under the Canadian life-plus-50 term then in force, the copyright expired
+      at the end of 2005, before the 30 December 2022 extension to life-plus-70,
+      and was not revived. The text is the Wikisource transcription of that
+      edition, with the Greek, the argument, and the notes removed.
+
+  - id: seneca.naturales_quaestiones
+    author: Seneca
+    title: Natural Questions
+    translator: John Clarke
+    year: 1910
+    source: https://www.gutenberg.org/ebooks/76392
+    tier: optional
+    files:
+      - texts/seneca/natural-questions/book-*.md
+    numbering: >
+      Clarke's own books and chapters. Ids are
+      seneca.naturales_quaestiones.B.C, plus a preface passage where Clarke
+      printed one (books 1, 3, and 4). His book 4 is the book later editions
+      divide into IVA and IVB; this corpus keeps Clarke's book, not that
+      later split. Chapter counts are 17, 59, 30, 13, 18, 32, and 32.
+    license_basis: >
+      John Clarke's translation was published in 1910, before the 1930 United
+      States public-domain cutoff. The translator is identified as John Clarke,
+      Lecturer in Education at Aberdeen, born in 1853 or 1854 and died in 1939.
+      That identification matches the 1910 title page to a family genealogy;
+      it is a judgment call, not a national-biography entry. On that death
+      date, the Canadian life-plus-50 term expired at the end of 1989, before
+      the 30 December 2022 extension to life-plus-70, and the copyright was
+      not revived. Taken from Project Gutenberg ebook 76392. The Gutenberg
+      header, footer, and trademark language were removed, as were Archibald
+      Geikie's notes, Clarke's own notes, the index, running heads, marginal
+      section numbers, and bracketed note markers. Included only as an
+      optional physics text.
+
+missing:
+  - id: musonius.rufus
+    author: Musonius Rufus
+    title: Lectures and fragments
+    tier: core
+    reason: >
+      No English translation is verifiably public domain in both the United
+      States and Canada. The first complete English translation is Cora E.
+      Lutz, Yale Classical Studies 10 (1947). If that copyright was renewed,
+      the United States term runs to 2042, and non-renewal was not verified
+      from Copyright Office records for this corpus. Lutz's death date was
+      also not established, so Canadian public-domain status under life-plus-70
+      could not be shown, and the 1947 publication was not already in the
+      Canadian public domain before the 2022 extension on any basis verified
+      here. Cynthia King's 2011 translation is in copyright. An Internet
+      Archive "Public Domain Mark" and a non-renewal claim on a third-party
+      site were not treated as enough.
+
+  - id: cleomedes.caelestia
+    author: Cleomedes
+    title: On the Heavens
+    tier: optional
+    reason: >
+      The first complete English translation is Alan C. Bowen and Robert B.
+      Todd, Cleomedes' Lectures on Astronomy (University of California Press,
+      2004), which is in copyright. No earlier complete English translation
+      was found at Project Gutenberg, Wikisource, or Perseus. Cleomedes was
+      optional and is omitted.
+
+  - id: early_stoic.fragments
+    author: Early Stoics
+    title: Collected fragments (Zeno, Cleanthes, Chrysippus, and others)
+    tier: foundations
+    reason: >
+      There is no public-domain English collection of the early Stoic
+      fragments. Von Arnim's Stoicorum Veterum Fragmenta is Greek and Latin.
+      A. A. Long and D. N. Sedley, The Hellenistic Philosophers (1987), and
+      Brad Inwood and Lloyd P. Gerson's Stoic sourcebooks are in copyright.
+      Early Stoic doctrine is present in this corpus only where a public-domain
+      translation already contains it: Diogenes Laertius book 7, Cicero's
+      On Ends book 3, On Duties, and On the Nature of the Gods book 2, and
+      Cleanthes' Hymn to Zeus. Those works are not a substitute for a fragment
+      collection.
+
+  - id: cicero.de_fato
+    author: Cicero
+    title: On Fate
+    tier: foundations
+    reason: >
+      C. D. Yonge's public-domain translation is in The Treatises of M. T.
+      Cicero (Bohn, 1853, with later printings), but the copies located are
+      page scans. No clean Project Gutenberg, Wikisource, or Standard Ebooks
+      transcription was found, and this corpus does not ship OCR. Stoic
+      arguments about fate are still present in On the Nature of the Gods
+      book 2, On Ends book 3, and Diogenes Laertius book 7.

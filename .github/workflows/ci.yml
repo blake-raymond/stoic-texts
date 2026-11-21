@@ -1,0 +1,22 @@
+name: corpus
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Counts match the texts
+        run: python scripts/count_tokens.py --check
+      - name: Function tags match the heuristic
+        run: python scripts/tag_passages.py --check
+      - name: Corpus tests
+        run: pytest
