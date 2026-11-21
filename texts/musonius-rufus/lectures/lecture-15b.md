@@ -1,0 +1,7 @@
+---
+id: musonius.rufus.15b
+---
+
+# XV B. Whether every child that is born should be raised (continued)
+
+"What seems to me most terrible is this: although some have no excuse of poverty and are in fact well off for money, and some even wealthy, they still dare not to raise the children who are born later, so that the ones born earlier may be better provided for, and contrive prosperity for their children out of an impious act, the murder of brothers. They do away with the brothers so that those others may have a larger share of the ancestral estate, ignorant of how much better it is to have many brothers than to have much money. Money stirs up plots from neighbours, but brothers keep the plotters away. Money needs help, and brothers are the best helpers. No friend, however good, could be set against a brother, nor could the goodwill of other people, though like and equal, compare with that which comes from brothers. What would anyone set beside a brother's goodwill in giving security of counsel? What partner in good things would be better disposed than a brother who is decent? Whose presence in misfortune would one miss more than such a brother's? I consider the most worth emulating the man who lives with many brothers in harmony; and I believe that the man who has these goods at home is the most beloved of the gods. For this reason, I think, each of us should try to leave brothers rather than money to his own children, since in doing so he leaves them greater resources for good."

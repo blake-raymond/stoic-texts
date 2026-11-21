@@ -1,0 +1,803 @@
+{
+  "schema_version": 1,
+  "word_count": "A word is a maximal run of Unicode letters. An apostrophe between letters stays inside the word. Digits, underscores, and hyphens are boundaries. The count covers each file as stored, including its id line and headings.",
+  "token_count": "Each file is encoded on its own with tiktoken, as exact UTF-8 text, with no chat wrapper and no added special tokens. Work, tier, and corpus totals are sums of those file counts, not the token count of the files concatenated.",
+  "tokenizers": {
+    "o200k_base": "tiktoken encoding o200k_base",
+    "cl100k_base": "tiktoken encoding cl100k_base"
+  },
+  "works": [
+    {
+      "id": "marcus.meditations",
+      "author": "Marcus Aurelius",
+      "title": "Meditations",
+      "translator": "George Long",
+      "year": 1862,
+      "source": "https://standardebooks.org/ebooks/marcus-aurelius/meditations/george-long",
+      "license_basis": "George Long's translation was published in 1862. In the United States every work published in 1930 or earlier is in the public domain. Long died in 1879, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. This is Long's translation, not Meric Casaubon's. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Paragraph numbers in this transcription of Long, not the traditional section numbers. Several books therefore have a different count from the usual sections; book 4 has 54 paragraphs. Books 1 and 2 end with a place-note, marcus.meditations.1.place and marcus.meditations.2.place.",
+      "files": [
+        "texts/marcus-aurelius/meditations/book-01.md",
+        "texts/marcus-aurelius/meditations/book-02.md",
+        "texts/marcus-aurelius/meditations/book-03.md",
+        "texts/marcus-aurelius/meditations/book-04.md",
+        "texts/marcus-aurelius/meditations/book-05.md",
+        "texts/marcus-aurelius/meditations/book-06.md",
+        "texts/marcus-aurelius/meditations/book-07.md",
+        "texts/marcus-aurelius/meditations/book-08.md",
+        "texts/marcus-aurelius/meditations/book-09.md",
+        "texts/marcus-aurelius/meditations/book-10.md",
+        "texts/marcus-aurelius/meditations/book-11.md",
+        "texts/marcus-aurelius/meditations/book-12.md"
+      ],
+      "word_count": 46363,
+      "tokens": {
+        "o200k_base": 59116,
+        "cl100k_base": 59388
+      }
+    },
+    {
+      "id": "epictetus.discourses",
+      "author": "Epictetus",
+      "title": "Discourses",
+      "translator": "George Long",
+      "year": 1877,
+      "source": "https://standardebooks.org/ebooks/epictetus/discourses/george-long",
+      "license_basis": "George Long's translation was published in 1877. In the United States every work published in 1930 or earlier is in the public domain. Long died in 1879, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. The Project Gutenberg selection of the Discourses was not used. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "One file per chapter, id epictetus.discourses.B.C, using Long's chapter division. The books have 30, 26, 26, and 13 chapters.",
+      "files": [
+        "texts/epictetus/discourses/book-01/chapter-01.md",
+        "texts/epictetus/discourses/book-01/chapter-02.md",
+        "texts/epictetus/discourses/book-01/chapter-03.md",
+        "texts/epictetus/discourses/book-01/chapter-04.md",
+        "texts/epictetus/discourses/book-01/chapter-05.md",
+        "texts/epictetus/discourses/book-01/chapter-06.md",
+        "texts/epictetus/discourses/book-01/chapter-07.md",
+        "texts/epictetus/discourses/book-01/chapter-08.md",
+        "texts/epictetus/discourses/book-01/chapter-09.md",
+        "texts/epictetus/discourses/book-01/chapter-10.md",
+        "texts/epictetus/discourses/book-01/chapter-11.md",
+        "texts/epictetus/discourses/book-01/chapter-12.md",
+        "texts/epictetus/discourses/book-01/chapter-13.md",
+        "texts/epictetus/discourses/book-01/chapter-14.md",
+        "texts/epictetus/discourses/book-01/chapter-15.md",
+        "texts/epictetus/discourses/book-01/chapter-16.md",
+        "texts/epictetus/discourses/book-01/chapter-17.md",
+        "texts/epictetus/discourses/book-01/chapter-18.md",
+        "texts/epictetus/discourses/book-01/chapter-19.md",
+        "texts/epictetus/discourses/book-01/chapter-20.md",
+        "texts/epictetus/discourses/book-01/chapter-21.md",
+        "texts/epictetus/discourses/book-01/chapter-22.md",
+        "texts/epictetus/discourses/book-01/chapter-23.md",
+        "texts/epictetus/discourses/book-01/chapter-24.md",
+        "texts/epictetus/discourses/book-01/chapter-25.md",
+        "texts/epictetus/discourses/book-01/chapter-26.md",
+        "texts/epictetus/discourses/book-01/chapter-27.md",
+        "texts/epictetus/discourses/book-01/chapter-28.md",
+        "texts/epictetus/discourses/book-01/chapter-29.md",
+        "texts/epictetus/discourses/book-01/chapter-30.md",
+        "texts/epictetus/discourses/book-02/chapter-01.md",
+        "texts/epictetus/discourses/book-02/chapter-02.md",
+        "texts/epictetus/discourses/book-02/chapter-03.md",
+        "texts/epictetus/discourses/book-02/chapter-04.md",
+        "texts/epictetus/discourses/book-02/chapter-05.md",
+        "texts/epictetus/discourses/book-02/chapter-06.md",
+        "texts/epictetus/discourses/book-02/chapter-07.md",
+        "texts/epictetus/discourses/book-02/chapter-08.md",
+        "texts/epictetus/discourses/book-02/chapter-09.md",
+        "texts/epictetus/discourses/book-02/chapter-10.md",
+        "texts/epictetus/discourses/book-02/chapter-11.md",
+        "texts/epictetus/discourses/book-02/chapter-12.md",
+        "texts/epictetus/discourses/book-02/chapter-13.md",
+        "texts/epictetus/discourses/book-02/chapter-14.md",
+        "texts/epictetus/discourses/book-02/chapter-15.md",
+        "texts/epictetus/discourses/book-02/chapter-16.md",
+        "texts/epictetus/discourses/book-02/chapter-17.md",
+        "texts/epictetus/discourses/book-02/chapter-18.md",
+        "texts/epictetus/discourses/book-02/chapter-19.md",
+        "texts/epictetus/discourses/book-02/chapter-20.md",
+        "texts/epictetus/discourses/book-02/chapter-21.md",
+        "texts/epictetus/discourses/book-02/chapter-22.md",
+        "texts/epictetus/discourses/book-02/chapter-23.md",
+        "texts/epictetus/discourses/book-02/chapter-24.md",
+        "texts/epictetus/discourses/book-02/chapter-25.md",
+        "texts/epictetus/discourses/book-02/chapter-26.md",
+        "texts/epictetus/discourses/book-03/chapter-01.md",
+        "texts/epictetus/discourses/book-03/chapter-02.md",
+        "texts/epictetus/discourses/book-03/chapter-03.md",
+        "texts/epictetus/discourses/book-03/chapter-04.md",
+        "texts/epictetus/discourses/book-03/chapter-05.md",
+        "texts/epictetus/discourses/book-03/chapter-06.md",
+        "texts/epictetus/discourses/book-03/chapter-07.md",
+        "texts/epictetus/discourses/book-03/chapter-08.md",
+        "texts/epictetus/discourses/book-03/chapter-09.md",
+        "texts/epictetus/discourses/book-03/chapter-10.md",
+        "texts/epictetus/discourses/book-03/chapter-11.md",
+        "texts/epictetus/discourses/book-03/chapter-12.md",
+        "texts/epictetus/discourses/book-03/chapter-13.md",
+        "texts/epictetus/discourses/book-03/chapter-14.md",
+        "texts/epictetus/discourses/book-03/chapter-15.md",
+        "texts/epictetus/discourses/book-03/chapter-16.md",
+        "texts/epictetus/discourses/book-03/chapter-17.md",
+        "texts/epictetus/discourses/book-03/chapter-18.md",
+        "texts/epictetus/discourses/book-03/chapter-19.md",
+        "texts/epictetus/discourses/book-03/chapter-20.md",
+        "texts/epictetus/discourses/book-03/chapter-21.md",
+        "texts/epictetus/discourses/book-03/chapter-22.md",
+        "texts/epictetus/discourses/book-03/chapter-23.md",
+        "texts/epictetus/discourses/book-03/chapter-24.md",
+        "texts/epictetus/discourses/book-03/chapter-25.md",
+        "texts/epictetus/discourses/book-03/chapter-26.md",
+        "texts/epictetus/discourses/book-04/chapter-01.md",
+        "texts/epictetus/discourses/book-04/chapter-02.md",
+        "texts/epictetus/discourses/book-04/chapter-03.md",
+        "texts/epictetus/discourses/book-04/chapter-04.md",
+        "texts/epictetus/discourses/book-04/chapter-05.md",
+        "texts/epictetus/discourses/book-04/chapter-06.md",
+        "texts/epictetus/discourses/book-04/chapter-07.md",
+        "texts/epictetus/discourses/book-04/chapter-08.md",
+        "texts/epictetus/discourses/book-04/chapter-09.md",
+        "texts/epictetus/discourses/book-04/chapter-10.md",
+        "texts/epictetus/discourses/book-04/chapter-11.md",
+        "texts/epictetus/discourses/book-04/chapter-12.md",
+        "texts/epictetus/discourses/book-04/chapter-13.md"
+      ],
+      "word_count": 118667,
+      "tokens": {
+        "o200k_base": 144504,
+        "cl100k_base": 145535
+      }
+    },
+    {
+      "id": "epictetus.enchiridion",
+      "author": "Epictetus",
+      "title": "Encheiridion",
+      "translator": "George Long",
+      "year": 1877,
+      "source": "https://en.wikisource.org/wiki/The_Discourses_of_Epictetus;_with_the_Encheiridion_and_Fragments/The_Encheiridion_or_Manual",
+      "license_basis": "George Long's translation was published in 1877 in The Discourses of Epictetus, with the Encheiridion and Fragments. In the United States every work published in 1930 or earlier is in the public domain. Long died in 1879, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The text is the Wikisource transcription of that edition. Wikisource footnote markers and the footnotes section were removed.",
+      "tier": "core",
+      "numbering": "Fifty-two chapters, Long's 1877 numbering. This edition is not divided into 53 chapters. Ids are epictetus.enchiridion.N.",
+      "files": [
+        "texts/epictetus/enchiridion/enchiridion.md"
+      ],
+      "word_count": 8266,
+      "tokens": {
+        "o200k_base": 10301,
+        "cl100k_base": 10436
+      }
+    },
+    {
+      "id": "epictetus.fragments",
+      "author": "Epictetus",
+      "title": "Fragments",
+      "translator": "George Long",
+      "year": 1877,
+      "source": "https://en.wikisource.org/wiki/The_Discourses_of_Epictetus;_with_the_Encheiridion_and_Fragments/Fragments",
+      "license_basis": "George Long's translation was published in 1877 in The Discourses of Epictetus, with the Encheiridion and Fragments. In the United States every work published in 1930 or earlier is in the public domain. Long died in 1879, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The text is the Wikisource transcription of that edition. Long's editorial introduction to the fragments, footnote markers, and the footnotes section were removed. Fragments that Long left in Latin without an English rendering are not included.",
+      "tier": "core",
+      "numbering": "Long's fragment numbers. Fragments 179, 180, and 181 are omitted because that edition gives them only in Latin. Ids run epictetus.fragments.1 through epictetus.fragments.178.",
+      "files": [
+        "texts/epictetus/fragments/fragments.md"
+      ],
+      "word_count": 7710,
+      "tokens": {
+        "o200k_base": 10396,
+        "cl100k_base": 10551
+      }
+    },
+    {
+      "id": "seneca.letters",
+      "author": "Seneca",
+      "title": "Moral Letters to Lucilius",
+      "translator": "Richard Mott Gummere",
+      "year": 1925,
+      "source": "https://standardebooks.org/ebooks/seneca/moral-letters-to-lucilius/richard-m-gummere",
+      "license_basis": "Richard Mott Gummere's Loeb translation was published in 1917, 1920, and 1925, all before the 1930 United States public-domain cutoff. Gummere died on 3 December 1969. Under the Canadian life-plus-50 term then in force, the copyright expired on 31 December 2019, before the 30 December 2022 extension to life-plus-70, and was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "All 124 letters, one file each. The file id is seneca.letters.N. The Loeb volumes were published in 1917 (letters 1-65), 1920 (66-92), and 1925 (93-124). The year field is the last of those volumes.",
+      "files": [
+        "texts/seneca/letters/letter-001.md",
+        "texts/seneca/letters/letter-002.md",
+        "texts/seneca/letters/letter-003.md",
+        "texts/seneca/letters/letter-004.md",
+        "texts/seneca/letters/letter-005.md",
+        "texts/seneca/letters/letter-006.md",
+        "texts/seneca/letters/letter-007.md",
+        "texts/seneca/letters/letter-008.md",
+        "texts/seneca/letters/letter-009.md",
+        "texts/seneca/letters/letter-010.md",
+        "texts/seneca/letters/letter-011.md",
+        "texts/seneca/letters/letter-012.md",
+        "texts/seneca/letters/letter-013.md",
+        "texts/seneca/letters/letter-014.md",
+        "texts/seneca/letters/letter-015.md",
+        "texts/seneca/letters/letter-016.md",
+        "texts/seneca/letters/letter-017.md",
+        "texts/seneca/letters/letter-018.md",
+        "texts/seneca/letters/letter-019.md",
+        "texts/seneca/letters/letter-020.md",
+        "texts/seneca/letters/letter-021.md",
+        "texts/seneca/letters/letter-022.md",
+        "texts/seneca/letters/letter-023.md",
+        "texts/seneca/letters/letter-024.md",
+        "texts/seneca/letters/letter-025.md",
+        "texts/seneca/letters/letter-026.md",
+        "texts/seneca/letters/letter-027.md",
+        "texts/seneca/letters/letter-028.md",
+        "texts/seneca/letters/letter-029.md",
+        "texts/seneca/letters/letter-030.md",
+        "texts/seneca/letters/letter-031.md",
+        "texts/seneca/letters/letter-032.md",
+        "texts/seneca/letters/letter-033.md",
+        "texts/seneca/letters/letter-034.md",
+        "texts/seneca/letters/letter-035.md",
+        "texts/seneca/letters/letter-036.md",
+        "texts/seneca/letters/letter-037.md",
+        "texts/seneca/letters/letter-038.md",
+        "texts/seneca/letters/letter-039.md",
+        "texts/seneca/letters/letter-040.md",
+        "texts/seneca/letters/letter-041.md",
+        "texts/seneca/letters/letter-042.md",
+        "texts/seneca/letters/letter-043.md",
+        "texts/seneca/letters/letter-044.md",
+        "texts/seneca/letters/letter-045.md",
+        "texts/seneca/letters/letter-046.md",
+        "texts/seneca/letters/letter-047.md",
+        "texts/seneca/letters/letter-048.md",
+        "texts/seneca/letters/letter-049.md",
+        "texts/seneca/letters/letter-050.md",
+        "texts/seneca/letters/letter-051.md",
+        "texts/seneca/letters/letter-052.md",
+        "texts/seneca/letters/letter-053.md",
+        "texts/seneca/letters/letter-054.md",
+        "texts/seneca/letters/letter-055.md",
+        "texts/seneca/letters/letter-056.md",
+        "texts/seneca/letters/letter-057.md",
+        "texts/seneca/letters/letter-058.md",
+        "texts/seneca/letters/letter-059.md",
+        "texts/seneca/letters/letter-060.md",
+        "texts/seneca/letters/letter-061.md",
+        "texts/seneca/letters/letter-062.md",
+        "texts/seneca/letters/letter-063.md",
+        "texts/seneca/letters/letter-064.md",
+        "texts/seneca/letters/letter-065.md",
+        "texts/seneca/letters/letter-066.md",
+        "texts/seneca/letters/letter-067.md",
+        "texts/seneca/letters/letter-068.md",
+        "texts/seneca/letters/letter-069.md",
+        "texts/seneca/letters/letter-070.md",
+        "texts/seneca/letters/letter-071.md",
+        "texts/seneca/letters/letter-072.md",
+        "texts/seneca/letters/letter-073.md",
+        "texts/seneca/letters/letter-074.md",
+        "texts/seneca/letters/letter-075.md",
+        "texts/seneca/letters/letter-076.md",
+        "texts/seneca/letters/letter-077.md",
+        "texts/seneca/letters/letter-078.md",
+        "texts/seneca/letters/letter-079.md",
+        "texts/seneca/letters/letter-080.md",
+        "texts/seneca/letters/letter-081.md",
+        "texts/seneca/letters/letter-082.md",
+        "texts/seneca/letters/letter-083.md",
+        "texts/seneca/letters/letter-084.md",
+        "texts/seneca/letters/letter-085.md",
+        "texts/seneca/letters/letter-086.md",
+        "texts/seneca/letters/letter-087.md",
+        "texts/seneca/letters/letter-088.md",
+        "texts/seneca/letters/letter-089.md",
+        "texts/seneca/letters/letter-090.md",
+        "texts/seneca/letters/letter-091.md",
+        "texts/seneca/letters/letter-092.md",
+        "texts/seneca/letters/letter-093.md",
+        "texts/seneca/letters/letter-094.md",
+        "texts/seneca/letters/letter-095.md",
+        "texts/seneca/letters/letter-096.md",
+        "texts/seneca/letters/letter-097.md",
+        "texts/seneca/letters/letter-098.md",
+        "texts/seneca/letters/letter-099.md",
+        "texts/seneca/letters/letter-100.md",
+        "texts/seneca/letters/letter-101.md",
+        "texts/seneca/letters/letter-102.md",
+        "texts/seneca/letters/letter-103.md",
+        "texts/seneca/letters/letter-104.md",
+        "texts/seneca/letters/letter-105.md",
+        "texts/seneca/letters/letter-106.md",
+        "texts/seneca/letters/letter-107.md",
+        "texts/seneca/letters/letter-108.md",
+        "texts/seneca/letters/letter-109.md",
+        "texts/seneca/letters/letter-110.md",
+        "texts/seneca/letters/letter-111.md",
+        "texts/seneca/letters/letter-112.md",
+        "texts/seneca/letters/letter-113.md",
+        "texts/seneca/letters/letter-114.md",
+        "texts/seneca/letters/letter-115.md",
+        "texts/seneca/letters/letter-116.md",
+        "texts/seneca/letters/letter-117.md",
+        "texts/seneca/letters/letter-118.md",
+        "texts/seneca/letters/letter-119.md",
+        "texts/seneca/letters/letter-120.md",
+        "texts/seneca/letters/letter-121.md",
+        "texts/seneca/letters/letter-122.md",
+        "texts/seneca/letters/letter-123.md",
+        "texts/seneca/letters/letter-124.md"
+      ],
+      "word_count": 210812,
+      "tokens": {
+        "o200k_base": 253827,
+        "cl100k_base": 254944
+      }
+    },
+    {
+      "id": "seneca.de_providentia",
+      "author": "Seneca",
+      "title": "On Providence",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "source": "https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart",
+      "license_basis": "Aubrey Stewart's translation of the minor dialogues, including On Providence and On Clemency, was published in 1889. On Benefits was published in 1887. Both are before the 1930 United States public-domain cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Stewart's sections, id seneca.de_providentia.N.",
+      "files": [
+        "texts/seneca/de-providentia/de-providentia.md"
+      ],
+      "word_count": 6859,
+      "tokens": {
+        "o200k_base": 8316,
+        "cl100k_base": 8345
+      }
+    },
+    {
+      "id": "seneca.de_constantia",
+      "author": "Seneca",
+      "title": "On the Firmness of the Wise Person",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "source": "https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart",
+      "license_basis": "Aubrey Stewart's translation was published in 1889, before the 1930 United States public-domain cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Stewart's sections, id seneca.de_constantia.N.",
+      "files": [
+        "texts/seneca/de-constantia/de-constantia.md"
+      ],
+      "word_count": 8890,
+      "tokens": {
+        "o200k_base": 10699,
+        "cl100k_base": 10742
+      }
+    },
+    {
+      "id": "seneca.de_ira",
+      "author": "Seneca",
+      "title": "On Anger",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "source": "https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart",
+      "license_basis": "Aubrey Stewart's translation was published in 1889, before the 1930 United States public-domain cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Three books. Ids are seneca.de_ira.B.S, using Stewart's sections.",
+      "files": [
+        "texts/seneca/de-ira/book-01.md",
+        "texts/seneca/de-ira/book-02.md",
+        "texts/seneca/de-ira/book-03.md"
+      ],
+      "word_count": 39290,
+      "tokens": {
+        "o200k_base": 47798,
+        "cl100k_base": 47975
+      }
+    },
+    {
+      "id": "seneca.consolatio_ad_marciam",
+      "author": "Seneca",
+      "title": "To Marcia, on Consolation",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "source": "https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart",
+      "license_basis": "Aubrey Stewart's translation was published in 1889, before the 1930 United States public-domain cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Stewart's sections, id seneca.consolatio_ad_marciam.N.",
+      "files": [
+        "texts/seneca/consolatio-ad-marciam/consolatio-ad-marciam.md"
+      ],
+      "word_count": 14849,
+      "tokens": {
+        "o200k_base": 17804,
+        "cl100k_base": 17908
+      }
+    },
+    {
+      "id": "seneca.de_vita_beata",
+      "author": "Seneca",
+      "title": "On the Happy Life",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "source": "https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart",
+      "license_basis": "Aubrey Stewart's translation was published in 1889, before the 1930 United States public-domain cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Stewart's sections, id seneca.de_vita_beata.N.",
+      "files": [
+        "texts/seneca/de-vita-beata/de-vita-beata.md"
+      ],
+      "word_count": 12741,
+      "tokens": {
+        "o200k_base": 15263,
+        "cl100k_base": 15300
+      }
+    },
+    {
+      "id": "seneca.de_otio",
+      "author": "Seneca",
+      "title": "On Leisure",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "source": "https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart",
+      "license_basis": "Aubrey Stewart's translation was published in 1889, before the 1930 United States public-domain cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Stewart's sections, id seneca.de_otio.N. The work is fragmentary.",
+      "files": [
+        "texts/seneca/de-otio/de-otio.md"
+      ],
+      "word_count": 3404,
+      "tokens": {
+        "o200k_base": 3986,
+        "cl100k_base": 4010
+      }
+    },
+    {
+      "id": "seneca.de_tranquillitate",
+      "author": "Seneca",
+      "title": "On Peace of Mind",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "source": "https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart",
+      "license_basis": "Aubrey Stewart's translation was published in 1889, before the 1930 United States public-domain cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Stewart's sections, id seneca.de_tranquillitate.N.",
+      "files": [
+        "texts/seneca/de-tranquillitate/de-tranquillitate.md"
+      ],
+      "word_count": 13312,
+      "tokens": {
+        "o200k_base": 15810,
+        "cl100k_base": 15896
+      }
+    },
+    {
+      "id": "seneca.de_brevitate_vitae",
+      "author": "Seneca",
+      "title": "On the Shortness of Life",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "source": "https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart",
+      "license_basis": "Aubrey Stewart's translation was published in 1889, before the 1930 United States public-domain cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Stewart's sections, id seneca.de_brevitate_vitae.N.",
+      "files": [
+        "texts/seneca/de-brevitate-vitae/de-brevitate-vitae.md"
+      ],
+      "word_count": 10718,
+      "tokens": {
+        "o200k_base": 12869,
+        "cl100k_base": 12925
+      }
+    },
+    {
+      "id": "seneca.consolatio_ad_helviam",
+      "author": "Seneca",
+      "title": "To Helvia, on Consolation",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "source": "https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart",
+      "license_basis": "Aubrey Stewart's translation was published in 1889, before the 1930 United States public-domain cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Stewart's sections, id seneca.consolatio_ad_helviam.N.",
+      "files": [
+        "texts/seneca/consolatio-ad-helviam/consolatio-ad-helviam.md"
+      ],
+      "word_count": 11364,
+      "tokens": {
+        "o200k_base": 13606,
+        "cl100k_base": 13661
+      }
+    },
+    {
+      "id": "seneca.consolatio_ad_polybium",
+      "author": "Seneca",
+      "title": "To Polybius, on Consolation",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "source": "https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart",
+      "license_basis": "Aubrey Stewart's translation was published in 1889, before the 1930 United States public-domain cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Stewart's sections, id seneca.consolatio_ad_polybium.N.",
+      "files": [
+        "texts/seneca/consolatio-ad-polybium/consolatio-ad-polybium.md"
+      ],
+      "word_count": 9325,
+      "tokens": {
+        "o200k_base": 11060,
+        "cl100k_base": 11119
+      }
+    },
+    {
+      "id": "seneca.de_clementia",
+      "author": "Seneca",
+      "title": "On Clemency",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "source": "https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart",
+      "license_basis": "Aubrey Stewart's translation was published in 1889, before the 1930 United States public-domain cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Two books. Ids are seneca.de_clementia.B.S, using Stewart's sections. The work is incomplete.",
+      "files": [
+        "texts/seneca/de-clementia/book-01.md",
+        "texts/seneca/de-clementia/book-02.md"
+      ],
+      "word_count": 14477,
+      "tokens": {
+        "o200k_base": 17388,
+        "cl100k_base": 17476
+      }
+    },
+    {
+      "id": "seneca.de_beneficiis",
+      "author": "Seneca",
+      "title": "On Benefits",
+      "translator": "Aubrey Stewart",
+      "year": 1887,
+      "source": "https://standardebooks.org/ebooks/seneca/dialogues/aubrey-stewart",
+      "license_basis": "Aubrey Stewart's translation of On Benefits was published in 1887, before the 1930 United States public-domain cutoff. Stewart died in 1918, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Introductions and notes are not included.",
+      "tier": "core",
+      "numbering": "Seven books. Ids are seneca.de_beneficiis.B.S, using Stewart's sections.",
+      "files": [
+        "texts/seneca/de-beneficiis/book-01.md",
+        "texts/seneca/de-beneficiis/book-02.md",
+        "texts/seneca/de-beneficiis/book-03.md",
+        "texts/seneca/de-beneficiis/book-04.md",
+        "texts/seneca/de-beneficiis/book-05.md",
+        "texts/seneca/de-beneficiis/book-06.md",
+        "texts/seneca/de-beneficiis/book-07.md"
+      ],
+      "word_count": 81547,
+      "tokens": {
+        "o200k_base": 98262,
+        "cl100k_base": 98506
+      }
+    },
+    {
+      "id": "musonius.rufus",
+      "author": "Musonius Rufus",
+      "title": "Lectures and Fragments",
+      "translator": "Blake Raymond",
+      "year": 2026,
+      "source": "https://archive.org/details/cmusoniirufirel00hensgoog",
+      "license_basis": "Translated by Blake Raymond from Otto Hense, C. Musonii Rufi Reliquiae (Teubner, Leipzig, 1905). Hense died in 1931, so the Greek edition is in the public domain in the United States and in Canada. Blake Raymond wrote this English translation and releases it to the public domain under CC0. This is not the Lutz (1947) or King (2011) translation. Hense's Latin preface, testimonia, critical apparatus, and notes are not included.",
+      "tier": "core",
+      "numbering": "Hense's 1905 numbering, also used by Lutz. Lectures I-XXI are musonius.rufus.N, with the split discourses as 13a, 13b, 15a, 15b, 18a, and 18b. Fragments XXII-LIII are musonius.rufus.22 through musonius.rufus.53 in one file. One file per lecture. The spurious Letter to Pancratides and the four letters in Philostratus are omitted.",
+      "files": [
+        "texts/musonius-rufus/lectures/lecture-01.md",
+        "texts/musonius-rufus/lectures/lecture-02.md",
+        "texts/musonius-rufus/lectures/lecture-03.md",
+        "texts/musonius-rufus/lectures/lecture-04.md",
+        "texts/musonius-rufus/lectures/lecture-05.md",
+        "texts/musonius-rufus/lectures/lecture-06.md",
+        "texts/musonius-rufus/lectures/lecture-07.md",
+        "texts/musonius-rufus/lectures/lecture-08.md",
+        "texts/musonius-rufus/lectures/lecture-09.md",
+        "texts/musonius-rufus/lectures/lecture-10.md",
+        "texts/musonius-rufus/lectures/lecture-11.md",
+        "texts/musonius-rufus/lectures/lecture-12.md",
+        "texts/musonius-rufus/lectures/lecture-13a.md",
+        "texts/musonius-rufus/lectures/lecture-13b.md",
+        "texts/musonius-rufus/lectures/lecture-14.md",
+        "texts/musonius-rufus/lectures/lecture-15a.md",
+        "texts/musonius-rufus/lectures/lecture-15b.md",
+        "texts/musonius-rufus/lectures/lecture-16.md",
+        "texts/musonius-rufus/lectures/lecture-17.md",
+        "texts/musonius-rufus/lectures/lecture-18a.md",
+        "texts/musonius-rufus/lectures/lecture-18b.md",
+        "texts/musonius-rufus/lectures/lecture-19.md",
+        "texts/musonius-rufus/lectures/lecture-20.md",
+        "texts/musonius-rufus/lectures/lecture-21.md",
+        "texts/musonius-rufus/fragments/fragments.md"
+      ],
+      "word_count": 21034,
+      "tokens": {
+        "o200k_base": 25638,
+        "cl100k_base": 25730
+      }
+    },
+    {
+      "id": "cicero.de_finibus.3",
+      "author": "Cicero",
+      "title": "On Ends, book 3",
+      "translator": "C. D. Yonge",
+      "year": 1875,
+      "source": "https://www.gutenberg.org/ebooks/29247",
+      "license_basis": "C. D. Yonge's translation, in the 1875 Bell printing of the Bohn volume, is before the 1930 United States public-domain cutoff. Yonge died in 1891, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. Taken from Project Gutenberg ebook 29247. The Gutenberg header, footer, and trademark language have been removed. Only book 3 is included.",
+      "tier": "foundations",
+      "numbering": "Yonge's chapters of book 3 only, id cicero.de_finibus.3.N. These are not the modern Latin section numbers 3.1-3.76. Books 1, 2, 4, and 5 are not included. Book 3 is Cato's account of Stoic ethics.",
+      "files": [
+        "texts/cicero/de-finibus/book-03.md"
+      ],
+      "word_count": 13464,
+      "tokens": {
+        "o200k_base": 16135,
+        "cl100k_base": 16317
+      }
+    },
+    {
+      "id": "cicero.de_officiis",
+      "author": "Cicero",
+      "title": "On Duties",
+      "translator": "Walter Miller",
+      "year": 1913,
+      "source": "https://www.gutenberg.org/ebooks/47001",
+      "license_basis": "Walter Miller's Loeb translation was published in 1913, before the 1930 United States public-domain cutoff. Miller died on 28 July 1949. Under the Canadian life-plus-50 term then in force, the copyright expired at the end of 1999, before the 30 December 2022 extension to life-plus-70, and was not revived. Taken from Project Gutenberg ebook 47001. The Gutenberg header, footer, and trademark language have been removed, and so have the Latin text, apparatus, and marginal headings.",
+      "tier": "foundations",
+      "numbering": "Cicero's standard section numbers. Book 1 has sections 1-161, book 2 has 1-89, and book 3 has 1-121. Ids are cicero.de_officiis.B.S. The facing Latin and the textual apparatus are not included.",
+      "files": [
+        "texts/cicero/de-officiis/book-01.md",
+        "texts/cicero/de-officiis/book-02.md",
+        "texts/cicero/de-officiis/book-03.md"
+      ],
+      "word_count": 67670,
+      "tokens": {
+        "o200k_base": 93960,
+        "cl100k_base": 94639
+      }
+    },
+    {
+      "id": "cicero.de_natura_deorum.2",
+      "author": "Cicero",
+      "title": "On the Nature of the Gods, book 2",
+      "translator": "C. D. Yonge",
+      "year": 1877,
+      "source": "https://www.gutenberg.org/ebooks/14988",
+      "license_basis": "The 1877 Harper edition is described on its title page as literally translated, chiefly by C. D. Yonge. It revises an earlier English version sometimes ascribed to Franklin. Both the revision and that earlier version are public domain. Publication in 1877 is before the 1930 United States cutoff. Yonge died in 1891, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. Taken from Project Gutenberg ebook 14988. The Gutenberg header, footer, trademark language, and bracketed footnote markers were removed. Only book 2 is included.",
+      "tier": "foundations",
+      "numbering": "Yonge's chapters of book 2 only, id cicero.de_natura_deorum.2.N. These are not the modern Latin section numbers. Books 1 and 3, the Epicurean and Academic speeches, are not included. Book 2 is Balbus's Stoic account.",
+      "files": [
+        "texts/cicero/de-natura-deorum/book-02.md"
+      ],
+      "word_count": 22427,
+      "tokens": {
+        "o200k_base": 28344,
+        "cl100k_base": 28479
+      }
+    },
+    {
+      "id": "diogenes.lives.7",
+      "author": "Diogenes Laertius",
+      "title": "Lives of the Eminent Philosophers, book 7",
+      "translator": "C. D. Yonge",
+      "year": 1853,
+      "source": "https://standardebooks.org/ebooks/diogenes-laertius/the-lives-and-opinions-of-eminent-philosophers/c-d-yonge",
+      "license_basis": "C. D. Yonge's translation was published in 1853, before the 1930 United States public-domain cutoff. Yonge died in 1891, so in Canada the life-plus-50 term had expired long before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. The Standard Ebooks transcription and markup are dedicated to the public domain under CC0. Only book 7 is included. Introductions and notes are not included. Perseus editions were not used, because their markup is often under a share-alike license that does not sit cleanly with a CC0 repository.",
+      "tier": "foundations",
+      "numbering": "Paragraph numbers within each life in this transcription, not the standard 7.1-style section numbers. The lives are Zeno, Ariston, Herillus, Dionysius, Cleanthes, Sphaerus, and Chrysippus. The other books of Diogenes are not included.",
+      "files": [
+        "texts/diogenes-laertius/book-7/zeno.md",
+        "texts/diogenes-laertius/book-7/ariston.md",
+        "texts/diogenes-laertius/book-7/herillus.md",
+        "texts/diogenes-laertius/book-7/dionysius.md",
+        "texts/diogenes-laertius/book-7/cleanthes.md",
+        "texts/diogenes-laertius/book-7/sphaerus.md",
+        "texts/diogenes-laertius/book-7/chrysippus.md"
+      ],
+      "word_count": 31454,
+      "tokens": {
+        "o200k_base": 43589,
+        "cl100k_base": 43840
+      }
+    },
+    {
+      "id": "cleanthes.hymn_to_zeus",
+      "author": "Cleanthes",
+      "title": "Hymn to Zeus",
+      "translator": "E. H. Blakeney",
+      "year": 1921,
+      "source": "https://en.wikisource.org/wiki/The_Hymn_of_Cleanthes",
+      "license_basis": "E. H. Blakeney's verse translation was published in 1921, before the 1930 United States public-domain cutoff. Blakeney died in August 1955. Under the Canadian life-plus-50 term then in force, the copyright expired at the end of 2005, before the 30 December 2022 extension to life-plus-70, and was not revived. The text is the Wikisource transcription of that edition, with the Greek, the argument, and the notes removed.",
+      "tier": "foundations",
+      "numbering": "One passage, the English poem. The Greek, the argument, and the notes are not included. Line numbers printed in the Wikisource transcription were removed.",
+      "files": [
+        "texts/cleanthes/hymn-to-zeus/hymn.md"
+      ],
+      "word_count": 393,
+      "tokens": {
+        "o200k_base": 564,
+        "cl100k_base": 570
+      }
+    },
+    {
+      "id": "seneca.naturales_quaestiones",
+      "author": "Seneca",
+      "title": "Natural Questions",
+      "translator": "John Clarke",
+      "year": 1910,
+      "source": "https://www.gutenberg.org/ebooks/76392",
+      "license_basis": "John Clarke's translation was published in 1910, before the 1930 United States public-domain cutoff. The translator is identified as John Clarke, Lecturer in Education at Aberdeen, born in 1853 or 1854 and died in 1939. That identification matches the 1910 title page to a family genealogy; it is a judgment call, not a national-biography entry. On that death date, the Canadian life-plus-50 term expired at the end of 1989, before the 30 December 2022 extension to life-plus-70, and the copyright was not revived. Taken from Project Gutenberg ebook 76392. The Gutenberg header, footer, and trademark language were removed, as were Archibald Geikie's notes, Clarke's own notes, the index, running heads, marginal section numbers, and bracketed note markers. Included only as an optional physics text.",
+      "tier": "optional",
+      "numbering": "Clarke's own books and chapters. Ids are seneca.naturales_quaestiones.B.C, plus a preface passage where Clarke printed one (books 1, 3, and 4). His book 4 is the book later editions divide into IVA and IVB; this corpus keeps Clarke's book, not that later split. Chapter counts are 17, 59, 30, 13, 18, 32, and 32.",
+      "files": [
+        "texts/seneca/natural-questions/book-01.md",
+        "texts/seneca/natural-questions/book-02.md",
+        "texts/seneca/natural-questions/book-03.md",
+        "texts/seneca/natural-questions/book-04.md",
+        "texts/seneca/natural-questions/book-05.md",
+        "texts/seneca/natural-questions/book-06.md",
+        "texts/seneca/natural-questions/book-07.md"
+      ],
+      "word_count": 81450,
+      "tokens": {
+        "o200k_base": 99301,
+        "cl100k_base": 99852
+      }
+    }
+  ],
+  "missing": [
+    {
+      "id": "cleomedes.caelestia",
+      "author": "Cleomedes",
+      "title": "On the Heavens",
+      "tier": "optional",
+      "reason": "The first complete English translation is Alan C. Bowen and Robert B. Todd, Cleomedes' Lectures on Astronomy (University of California Press, 2004), which is in copyright. No earlier complete English translation was found at Project Gutenberg, Wikisource, or Perseus. Cleomedes was optional and is omitted.\n"
+    },
+    {
+      "id": "early_stoic.fragments",
+      "author": "Early Stoics",
+      "title": "Collected fragments (Zeno, Cleanthes, Chrysippus, and others)",
+      "tier": "foundations",
+      "reason": "There is no public-domain English collection of the early Stoic fragments. Von Arnim's Stoicorum Veterum Fragmenta is Greek and Latin. A. A. Long and D. N. Sedley, The Hellenistic Philosophers (1987), and Brad Inwood and Lloyd P. Gerson's Stoic sourcebooks are in copyright. Early Stoic doctrine is present in this corpus only where a public-domain translation already contains it: Diogenes Laertius book 7, Cicero's On Ends book 3, On Duties, and On the Nature of the Gods book 2, and Cleanthes' Hymn to Zeus. Those works are not a substitute for a fragment collection.\n"
+    },
+    {
+      "id": "cicero.de_fato",
+      "author": "Cicero",
+      "title": "On Fate",
+      "tier": "foundations",
+      "reason": "C. D. Yonge's public-domain translation is in The Treatises of M. T. Cicero (Bohn, 1853, with later printings), but the copies located are page scans. No clean Project Gutenberg, Wikisource, or Standard Ebooks transcription was found, and this corpus does not ship OCR. Stoic arguments about fate are still present in On the Nature of the Gods book 2, On Ends book 3, and Diogenes Laertius book 7.\n"
+    }
+  ],
+  "totals": {
+    "core": {
+      "works": 18,
+      "files": 279,
+      "word_count": 639628,
+      "tokens": {
+        "o200k_base": 776643,
+        "cl100k_base": 780447
+      }
+    },
+    "foundations": {
+      "works": 5,
+      "files": 13,
+      "word_count": 135408,
+      "tokens": {
+        "o200k_base": 182592,
+        "cl100k_base": 183845
+      }
+    },
+    "optional": {
+      "works": 1,
+      "files": 7,
+      "word_count": 81450,
+      "tokens": {
+        "o200k_base": 99301,
+        "cl100k_base": 99852
+      }
+    },
+    "all": {
+      "works": 24,
+      "files": 299,
+      "word_count": 856486,
+      "tokens": {
+        "o200k_base": 1058536,
+        "cl100k_base": 1064144
+      }
+    }
+  }
+}
