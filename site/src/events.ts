@@ -153,6 +153,40 @@ export function sanitizePublicEvent(raw: unknown, now: number): { ok: true; row:
   };
 }
 
+export function serverEvent(name: string, props: Record<string, unknown>, now: number): EventRow {
+  return {
+    name,
+    variant: "",
+    offer: OFFER,
+    cta: null,
+    sessionId: null,
+    clientReferenceId: null,
+    stripeEventId: null,
+    ts: now,
+    props: JSON.stringify(props),
+  };
+}
+
+export async function insertEvent(db: D1Database, row: EventRow): Promise<void> {
+  await db.prepare(
+    `INSERT INTO events
+      (name, variant, offer, cta, session_id, client_reference_id, stripe_event_id, ts, props)
+     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)`,
+  )
+    .bind(
+      row.name,
+      row.variant || null,
+      row.offer,
+      row.cta,
+      row.sessionId,
+      row.clientReferenceId,
+      row.stripeEventId,
+      row.ts,
+      row.props,
+    )
+    .run();
+}
+
 export function purchaseEvent(input: {
   now: number;
   sessionId: string;

@@ -21,6 +21,15 @@
   "routes": [
     { "pattern": "oldcounsel.com", "custom_domain": true }
   ],
+  // Refund codes are mailed from noreply@oldcounsel.com.
+  // Onboard the domain before a real send: `npx wrangler email sending enable oldcounsel.com`
+  // Local wrangler dev simulates this binding and does not send mail. Leave remote unset.
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "allowed_sender_addresses": ["noreply@oldcounsel.com"]
+    }
+  ],
   "d1_databases": [
     {
       "binding": "DB",

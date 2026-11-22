@@ -1,5 +1,6 @@
 import { LAUNCH_DATE, OFFER } from "./config";
-import { purchaseEvent, sanitizePublicEvent, type EventRow } from "./events";
+import { insertEvent, purchaseEvent, sanitizePublicEvent } from "./events";
+import { handleRefundConfirm, handleRefundRequest, refundsReady } from "./refund";
 import { readCheckoutCompleted, verifyStripeSignature } from "./stripe";
 
 const MAX_BODY = 8192;
@@ -21,26 +22,6 @@ function stripeSecret(env: Env): string | undefined {
   return trimmed.length ? trimmed : undefined;
 }
 
-async function insertEvent(env: Env, row: EventRow): Promise<void> {
-  await env.DB.prepare(
-    `INSERT INTO events
-      (name, variant, offer, cta, session_id, client_reference_id, stripe_event_id, ts, props)
-     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)`,
-  )
-    .bind(
-      row.name,
-      row.variant || null,
-      row.offer,
-      row.cta,
-      row.sessionId,
-      row.clientReferenceId,
-      row.stripeEventId,
-      row.ts,
-      row.props,
-    )
-    .run();
-}
-
 async function handleEvent(request: Request, env: Env): Promise<Response> {
   const declared = Number(request.headers.get("content-length") || "0");
   if (Number.isFinite(declared) && declared > MAX_BODY) return json({ ok: false, error: "too large" }, 413);
@@ -55,7 +36,7 @@ async function handleEvent(request: Request, env: Env): Promise<Response> {
   const parsed = sanitizePublicEvent(raw, Date.now());
   if (!parsed.ok) return json({ ok: false, error: parsed.error }, 400);
   try {
-    await insertEvent(env, parsed.row);
+    await insertEvent(env.DB, parsed.row);
   } catch (error) {
     console.error(JSON.stringify({
       message: "event insert failed",
@@ -123,7 +104,7 @@ async function handleWebhook(request: Request, env: Env): Promise<Response> {
     stripeEventId: read.event.eventId,
   });
   try {
-    await insertEvent(env, row);
+    await insertEvent(env.DB, row);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     if (message.includes("UNIQUE")) return json({ ok: true, duplicate: true });
@@ -153,7 +134,10 @@ async function serveAsset(request: Request, env: Env): Promise<Response> {
   }
   const type = asset.headers.get("content-type") || "";
   if (!asset.ok || !type.includes("text/html")) return asset;
-  const html = (await asset.text()).replaceAll("__LAUNCH_DATE__", LAUNCH_DATE);
+  const ready = refundsReady(env) ? "yes" : "no";
+  const html = (await asset.text())
+    .replaceAll("__LAUNCH_DATE__", LAUNCH_DATE)
+    .replaceAll("__REFUND_READY__", ready);
   const headers = new Headers(asset.headers);
   headers.delete("content-length");
   headers.set("content-type", "text/html; charset=utf-8");
@@ -176,6 +160,14 @@ export default {
     if (path === "/api/stripe/webhook") {
       if (request.method !== "POST") return json({ ok: false }, 405);
       return handleWebhook(request, env);
+    }
+    if (path === "/api/refund/request") {
+      if (request.method !== "POST") return json({ ok: false }, 405);
+      return handleRefundRequest(request, env);
+    }
+    if (path === "/api/refund/confirm") {
+      if (request.method !== "POST") return json({ ok: false }, 405);
+      return handleRefundConfirm(request, env);
     }
     if (request.method !== "GET" && request.method !== "HEAD") return json({ ok: false }, 405);
     return serveAsset(request, env);

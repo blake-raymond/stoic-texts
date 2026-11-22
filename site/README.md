@@ -1,6 +1,6 @@
 # Old Counsel pre-order site
 
-The page for oldcounsel.com. It is a Cloudflare Worker with static assets and a D1 database for first-party events. Nothing here is deployed. The payment link is the live Stripe link already created for this offer. This folder does not call Stripe, and it holds no keys.
+The page for oldcounsel.com. It is a Cloudflare Worker with static assets and a D1 database for first-party events. Nothing here is deployed. The payment link is the live Stripe link already created for this offer. The refund route calls the Stripe API when `STRIPE_REFUND_KEY` is set. This folder holds no key values.
 
 ## Run it locally
 
@@ -50,6 +50,11 @@ https://buy.stripe.com/5kQ6oJakdaKugGS2SNfw404?client_reference_id=<button>_<var
 | `door_close` | the sheet is dismissed |
 | `purchase_return` | `/thanks` loads, including `session_id` |
 | `purchase` | Stripe `checkout.session.completed`, once the webhook secret is set |
+| `refund_request` | someone submits an email on `/refund` |
+| `refund_code_sent` | a code was emailed for an Old Counsel charge |
+| `refund_done` | a code was accepted and the refund call finished |
+
+`refund_request`, `refund_code_sent`, and `refund_done` are written by the Worker. `POST /api/event` does not accept them. The stored props do not include the email address. `refund_request` records `match`, `none`, or `error` so a missing code is visible in D1 without the page saying which emails have a pre-order.
 
 `purchase_return` is the browser landing on `/thanks`. `purchase` is the webhook, which is the reliable count of paid checkouts. A refresh of `/thanks` does not send `purchase_return` again in that tab.
 
@@ -90,6 +95,57 @@ On Cloudflare, set it with `npx wrangler secret put STRIPE_WEBHOOK_SECRET`. Do n
 
 Point the Stripe endpoint at `https://oldcounsel.com/api/stripe/webhook` and subscribe it to `checkout.session.completed`. Until the secret is set, purchases are not counted here. Stripe remains the source of payment records.
 
+## Refunds
+
+`/refund` refunds a buyer who asks. It does not refund anyone on a date by itself. The "end of 2027" refund in the FAQ is a separate promise.
+
+The link "Get a refund" is on `/thanks` and in the FAQ. Both go to `/refund`.
+
+1. The buyer enters the purchase email.
+2. If that email has an Old Counsel charge, the Worker emails a 6-digit code from `noreply@oldcounsel.com`. The code expires in 15 minutes. Requests are limited to 5 an hour per email and 20 an hour per IP. Code attempts are limited to 8 per 15 minutes per email and 30 per 15 minutes per IP.
+3. The page always answers "If that email has a pre-order, a code is on its way. It expires in 15 minutes." A missing purchase gets the same sentence.
+4. The buyer enters the code. The Worker refunds that email's unrefunded Old Counsel charges in full.
+5. The page says "Your refund is on its way. It takes 5 to 10 business days to appear."
+
+A charge qualifies only when one of these is true:
+
+- The Checkout Session is `complete` and `paid`, its `payment_link` is `plink_1UejbsRssDxlNdX37XKaLinq`, and the session email matches.
+- The PaymentIntent metadata is `experiment=oldcounsel-fakedoor-nov2026` and `offer=lifetime_49`, and the PaymentIntent or charge email matches.
+
+The Stripe account is shared with say.as. Anything else is not refunded. Each refund uses idempotency key `oldcounsel-refund-<payment_intent id>` and skips a charge that is already refunded.
+
+Codes are SHA-256 hashes in D1 (`refund_codes`), peppered with `STRIPE_REFUND_KEY`. The email address is not stored. Migration `0002_refunds.sql` creates that table and the rate-limit counters.
+
+If `STRIPE_REFUND_KEY` is unset, or the email binding has no `send` function, `/refund` does not show the form. It says to email help@oldcounsel.com.
+
+### Stripe restricted key
+
+Create a restricted key in the Stripe Dashboard. Name it something like `old-counsel-refunds`. Give it only:
+
+| Resource | Permission |
+| --- | --- |
+| Customers | Read |
+| Checkout Sessions | Read |
+| Payment Intents | Read |
+| Charges | Read |
+| Refunds | Write |
+
+No other write permission. Refunds Write is the only write. The key starts with `rk_live_` or `rk_test_`. Set it with `npx wrangler secret put STRIPE_REFUND_KEY`. Do not put it in `wrangler.jsonc`. Rotating the key invalidates codes that have not expired yet.
+
+The Worker reads customers by email, Checkout Sessions for that payment link, and PaymentIntents. It expands `latest_charge` and `customer` before refunding, and posts `POST /v1/refunds` with `payment_intent` and `reason=requested_by_customer`.
+
+### Email
+
+The Worker sends the code with the `EMAIL` binding (`send_email` in `wrangler.jsonc`), from `noreply@oldcounsel.com`, plain text, subject "Your refund code". The binding allows that sender only.
+
+Before a live send, onboard the domain to Cloudflare Email Sending. This repo does not run that command.
+
+```bash
+npx wrangler email sending enable oldcounsel.com
+```
+
+Add the SPF and DKIM records that command prints. The domain is already on Cloudflare, so those records belong on the oldcounsel.com zone. `wrangler dev` simulates the binding and does not send mail. Do not set `"remote": true` on the binding unless you mean to send real email from your laptop.
+
 ## Deploy
 
 Do this only when the site should actually go live. oldcounsel.com is already on Cloudflare. `wrangler.jsonc` routes this Worker to that hostname as a custom domain, so deploy attaches it. This repo does not run the deploy.
@@ -100,7 +156,9 @@ Do this only when the site should actually go live. oldcounsel.com is already on
 4. Replace the placeholder `database_id` in `wrangler.jsonc` with the id that command prints.
 5. `npx wrangler d1 migrations apply old-counsel-events --remote`
 6. `npx wrangler secret put STRIPE_WEBHOOK_SECRET`
-7. `npx wrangler deploy`
+7. `npx wrangler secret put STRIPE_REFUND_KEY` with the restricted key described above
+8. `npx wrangler email sending enable oldcounsel.com`, then add the SPF and DKIM records it prints
+9. `npx wrangler deploy`
 
 The route already in the config is:
 

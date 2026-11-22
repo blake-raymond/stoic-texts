@@ -29,7 +29,7 @@ def visible_text(html: str) -> str:
 
 
 def body(html: str) -> str:
-    match = re.search(r"<body>(.*)</body>", html, re.S)
+    match = re.search(r"<body\b[^>]*>(.*)</body>", html, re.S)
     assert match
     return match.group(1)
 
@@ -77,11 +77,13 @@ def test_payment_link_and_reference_id():
 def test_banned_words_are_absent_from_site_copy():
     index = (SITE / "public" / "index.html").read_text(encoding="utf-8")
     thanks = (SITE / "public" / "thanks.html").read_text(encoding="utf-8")
+    refund = (SITE / "public" / "refund.html").read_text(encoding="utf-8")
+    refund_js = (SITE / "public" / "refund.js").read_text(encoding="utf-8")
     scripts = "\n".join(
         (SITE / "public" / name).read_text(encoding="utf-8")
         for name in ("home.js", "thanks.js", "track.js")
     )
-    visible = "\n".join([visible_text(index), visible_text(thanks), scripts])
+    visible = "\n".join([visible_text(index), visible_text(thanks), visible_text(refund), scripts, refund_js])
     lowered = visible.lower()
     assert not re.search(r"\bphone\b", lowered)
     assert "free to try" not in lowered
@@ -89,9 +91,41 @@ def test_banned_words_are_absent_from_site_copy():
     assert not re.search(r"\bmemory\b", lowered)
     assert not re.search(r"\bremember\w*\b", lowered)
     assert not re.search(r"(?<![&\w])#[A-Za-z]", visible)
-    bodies = body(index) + body(thanks) + scripts
+    bodies = body(index) + body(thanks) + body(refund) + scripts + refund_js
     verbatim = re.search(r'data-verbatim="reply">.*?</div>\s*<button', index, re.S)
     assert verbatim
     bodies = bodies.replace(verbatim.group(0), "")
     assert "\u2014" not in bodies
     assert HEAD_EM_DASH in index
+
+
+def test_refund_links_and_copy():
+    index = (SITE / "public" / "index.html").read_text(encoding="utf-8")
+    thanks = (SITE / "public" / "thanks.html").read_text(encoding="utf-8")
+    refund = (SITE / "public" / "refund.html").read_text(encoding="utf-8")
+    copy = (SITE / "src" / "refund-copy.ts").read_text(encoding="utf-8")
+    stripe = (SITE / "src" / "refund-stripe.ts").read_text(encoding="utf-8")
+    events = (SITE / "src" / "events.ts").read_text(encoding="utf-8")
+    wrangler = (SITE / "wrangler.jsonc").read_text(encoding="utf-8")
+    assert index.count('href="/refund"') == 1
+    assert thanks.count('href="/refund"') == 1
+    assert ">Get a refund</a>" in index
+    assert ">Get a refund</a>" in thanks
+    assert "get a refund at https://oldcounsel.com/refund" in index
+    assert "Enter the email from your pre-order." in refund
+    assert "Email <a href=\"mailto:help@oldcounsel.com\">help@oldcounsel.com</a> and you'll be refunded in full." in refund
+    assert "5 to 10 business days" in copy
+    assert "If that email has a pre-order, a code is on its way." in copy
+    assert "noreply@oldcounsel.com" in copy
+    assert "plink_1UejbsRssDxlNdX37XKaLinq" in stripe
+    assert "oldcounsel-fakedoor-nov2026" in stripe
+    assert 'export const OFFER_META = "lifetime_49"' in stripe
+    assert "STRIPE_REFUND_KEY" in (SITE / "src" / "secrets.d.ts").read_text(encoding="utf-8")
+    assert '"send_email"' in wrangler
+    assert "noreply@oldcounsel.com" in wrangler
+    public = events.split("] as const", 1)[0]
+    assert "refund_" not in public
+    for text in (refund, copy, stripe):
+        assert "\u2014" not in text
+        assert not re.search(r"\bphone\b", text.lower())
+    assert "2027" not in refund

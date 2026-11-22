@@ -1,3 +1,4 @@
-# Copy to .dev.vars to exercise the webhook locally.
-# Leave STRIPE_WEBHOOK_SECRET unset and POST /api/stripe/webhook stores nothing.
+# Copy to .dev.vars to exercise the webhook or the refund form locally.
+# Leave a secret unset and that route stays closed.
 # STRIPE_WEBHOOK_SECRET=
+# STRIPE_REFUND_KEY=
