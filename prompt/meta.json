@@ -1,0 +1,85 @@
+{
+  "set": "F",
+  "model": "google/gemini-3.6-flash",
+  "temperature": 0.7,
+  "route": "openrouter",
+  "assembly": [
+    "prompt/persona_v22.md",
+    "source text F",
+    "prompt/persona_v22_reminder.md"
+  ],
+  "header": "# Your memory: the writings of the Stoics (old public-domain translations; never quote or cite them)",
+  "source_f": {
+    "characters": 992644,
+    "o200k_tokens": 225271
+  },
+  "system_prompt": {
+    "characters": 997660,
+    "o200k_tokens": 226360
+  },
+  "works": [
+    {
+      "id": "epictetus.enchiridion",
+      "author": "Epictetus",
+      "title": "Encheiridion",
+      "translator": "George Long",
+      "year": 1877,
+      "files": 1,
+      "passages": 52
+    },
+    {
+      "id": "epictetus.discourses",
+      "author": "Epictetus",
+      "title": "Discourses",
+      "translator": "George Long",
+      "year": 1877,
+      "files": 56,
+      "passages": 56
+    },
+    {
+      "id": "musonius.rufus",
+      "author": "Musonius Rufus",
+      "title": "Lectures and Fragments",
+      "translator": "Blake Raymond",
+      "year": 2026,
+      "files": 25,
+      "passages": 56
+    },
+    {
+      "id": "marcus.meditations",
+      "author": "Marcus Aurelius",
+      "title": "Meditations",
+      "translator": "George Long",
+      "year": 1862,
+      "files": 12,
+      "passages": 511
+    },
+    {
+      "id": "seneca.letters",
+      "author": "Seneca",
+      "title": "Moral Letters to Lucilius",
+      "translator": "Richard Mott Gummere",
+      "year": 1925,
+      "files": 15,
+      "passages": 15
+    },
+    {
+      "id": "seneca.de_brevitate_vitae",
+      "author": "Seneca",
+      "title": "On the Shortness of Life",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "files": 1,
+      "passages": 20
+    },
+    {
+      "id": "seneca.de_tranquillitate",
+      "author": "Seneca",
+      "title": "On Peace of Mind",
+      "translator": "Aubrey Stewart",
+      "year": 1889,
+      "files": 1,
+      "passages": 17
+    }
+  ]
+}

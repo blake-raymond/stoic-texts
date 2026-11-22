@@ -1,0 +1,68 @@
+:root{
+  --paper:#f5efe4; --paper-2:#ede4d4; --ink:#2a241f; --ink-2:#5b5048; --muted:#8a7d71;
+  --accent:#8c3f22; --accent-ink:#fff8ef; --rule:#d9ccb8;
+  --serif:"Newsreader", Georgia, "Times New Roman", serif;
+  --measure:34rem;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:1.1875rem;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--measure);margin:0 auto;padding:0 1.375rem}
+header.top{padding:1.25rem 0 0}
+.mark{font-size:1rem;font-weight:600;letter-spacing:.02em;color:inherit;text-decoration:none}
+section{padding:3.25rem 0}
+section + section{border-top:1px solid var(--rule)}
+.hero{padding:3.5rem 0 3.25rem}
+.eyebrow{font-size:.95rem;font-style:italic;color:var(--accent);margin:0 0 .9rem}
+h1{white-space:pre-line;font-weight:500;font-size:clamp(2.6rem,11vw,4.4rem);line-height:1.02;letter-spacing:-.02em;margin:0 0 1.25rem}
+h2{font-weight:500;font-size:clamp(1.75rem,6.5vw,2.35rem);line-height:1.12;letter-spacing:-.01em;margin:0 0 1rem}
+h3{font-size:1.15rem;font-weight:600;margin:0 0 .25rem}
+p{margin:0 0 1rem}
+.lede{font-size:1.25rem;color:var(--ink-2);margin-bottom:1.75rem}
+.cta{display:block;width:100%;text-align:center;font:inherit;font-weight:500;font-size:1.15rem;background:var(--accent);color:var(--accent-ink);border:0;border-radius:999px;padding:1rem 1.5rem;cursor:pointer;text-decoration:none;transition:transform .08s ease, background .15s}
+.cta:hover{background:#7a361c}.cta:active{transform:scale(.985)}
+.under{font-size:.98rem;color:var(--ink-2);text-align:center;margin:.75rem 0 0}
+.example{background:var(--paper-2);border-radius:18px;padding:1.4rem 1.25rem;margin:0 0 1.5rem}
+.tag{display:inline-block;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 1rem}
+.msg{margin:0 0 1.1rem}
+.who{font-size:.85rem;color:var(--muted);margin:0 0 .25rem;font-style:italic}
+.you p{font-style:italic;color:var(--ink-2)}
+.oc p{margin-bottom:.8rem}
+.read-full{display:inline;background:none;border:0;padding:0;margin:0 0 .2rem;font:inherit;font-style:italic;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:.15em}
+.points{display:grid;gap:1.6rem;margin:0}
+.points div p{color:var(--ink-2);margin:0}
+.points a{color:var(--accent)}
+.price{font-size:clamp(3rem,13vw,4.25rem);font-weight:500;line-height:1;margin:.25rem 0 .4rem;letter-spacing:-.02em}
+.price small{font-size:1.1rem;color:var(--ink-2);letter-spacing:0}
+.offer ul{list-style:none;padding:0;margin:1.25rem 0 1.75rem}
+.offer li{padding:.55rem 0;border-bottom:1px solid var(--rule)}
+.offer li:last-child{border-bottom:0}
+details{border-bottom:1px solid var(--rule);padding:.9rem 0}
+details:first-of-type{border-top:1px solid var(--rule)}
+summary{cursor:pointer;font-weight:500;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";float:right;color:var(--muted)}
+details[open] summary::after{content:"–"}
+details p{color:var(--ink-2);margin:.6rem 0 0}
+.close h2{margin-bottom:1.5rem}
+footer{padding:2rem 0 3rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--rule)}
+footer a{color:var(--muted)}
+.door{position:fixed;inset:0;background:rgba(42,36,31,.45);display:none;align-items:flex-end;justify-content:center;z-index:10}
+.door.open{display:flex}
+.sheet{background:var(--paper);width:100%;max-width:30rem;border-radius:22px 22px 0 0;padding:1.75rem 1.375rem 2rem;box-shadow:0 -8px 40px rgba(0,0,0,.18);max-height:calc(100dvh - 1.5rem);overflow:auto}
+.sheet h2{font-size:2rem;margin-bottom:.6rem}
+.sheet p{color:var(--ink-2)}
+.x{float:right;background:none;border:0;font:inherit;font-size:1.6rem;line-height:1;color:var(--muted);cursor:pointer;margin:-.4rem -.3rem 0 0}
+.terms{list-style:none;padding:0;margin:0 0 1.25rem}
+.terms li{padding:.45rem 0;border-bottom:1px solid var(--rule)}
+.terms li:last-child{border-bottom:0}
+.thanks a{color:var(--accent)}
+@media (min-width:760px){
+  :root{--measure:40rem}
+  .hero{padding:6rem 0 4.5rem}
+  .cta{display:inline-block;width:auto;min-width:18rem}
+  .hero .under,.offer .under,.close .under,.thanks .under{text-align:left}
+  .points{grid-template-columns:1fr 1fr;gap:2rem 2.5rem}
+  .door{align-items:center;padding:1.5rem}
+  .sheet{border-radius:22px;max-height:calc(100dvh - 3rem)}
+}

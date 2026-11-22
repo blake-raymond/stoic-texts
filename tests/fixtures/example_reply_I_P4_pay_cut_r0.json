@@ -1,0 +1,17 @@
+{
+ "condition": "I",
+ "prompt_id": "P4_pay_cut",
+ "rep": 0,
+ "model": "google/gemini-3.6-flash",
+ "served_model": "google/gemini-3.6-flash",
+ "provider": "Google",
+ "text": "Looking at your situation, the word \"suicide\" seems entirely misplaced. In fact, if you look closely at how you are spending your days, staying in your current grind might be a far slower, quieter form of the same thing.\n\nLet us break down what your friends are actually reacting to. They see a single number\u2014a hundred and five thousand dollars\u2014and they panic. They are measuring your life by a balance sheet. But money is only useful for what it secures: safety, sustenance, and the freedom to spend your brief time on earth wisely. It is a tool, not the master of the house.\n\nSeneca observed that people fiercely guard their physical property from intruders, yet they hand over their time to employers and obligations without a second thought, acting as if hours were cheap and inexhaustible. Time is the one thing you can never earn back or replace once it slips away. At sixty hours a week, you are surrendering the lion's share of your conscious life to accumulate dollars that, by your own numbers, you do not even need.\n\nLook at the reality of your position. Your annual living expenses are forty-two thousand dollars. The new role pays seventy-five thousand. That means your daily needs are fully met, with a comfortable cushion left over, while your nearly one-million-dollar nest egg sits untouched, growing in the background. You are not choosing ruin; you are choosing to buy back thirty hours of your life every single week. That is fifteen hundred hours of your own existence returned to you every year. \n\nYour friends judge the decision based on what you are surrendering, not what you are purchasing. Most people are conditioned to believe that more is always better, even if \"more\" costs you your peace, your health, and your agency. But if your goal is to live well, hoarding surplus wealth at the expense of your life's currency is a poor trade.\n\nBefore you make the leap, sit down with a pen and do one concrete thing: map out precisely how you will use those thirty reclaimed hours each week. Time is only as valuable as the intention you bring to it. Ask yourself: five years from today, will you care more about the extra digits in a bank account, or the three thousand hours of freedom you chose to reclaim?",
+ "latency_s": 7.73,
+ "prompt_tokens": 226374,
+ "cached_tokens": 226270,
+ "cache_write_tokens": 0,
+ "output_tokens": 1648,
+ "thinking_tokens": 1177,
+ "cost_usd": 0.02322825,
+ "finish_reason": "stop"
+}

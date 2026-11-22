@@ -1,0 +1,3 @@
+# Copy to .dev.vars to exercise the webhook locally.
+# Leave STRIPE_WEBHOOK_SECRET unset and POST /api/stripe/webhook stores nothing.
+# STRIPE_WEBHOOK_SECRET=

@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "old-counsel",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "upload_source_maps": true,
+  // Logs and traces for the pre-order site. Traffic is small, so both are sampled at 1.
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 1 }
+  },
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // The Worker rewrites __LAUNCH_DATE__ in HTML, and it owns /api and /thanks.
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "old-counsel-events",
+      // Placeholder. Replace with the id from `npx wrangler d1 create old-counsel-events` before any deploy.
+      "database_id": "00000000-0000-4000-8000-000000000001",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

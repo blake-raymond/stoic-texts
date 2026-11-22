@@ -4,6 +4,46 @@ A public-domain English corpus of the surviving ancient Stoic primary texts, arr
 
 One translation is included per work. The text files contain the translation only. Editorial introductions, commentaries, indexes, textual notes, and duplicate translations are left out.
 
+## Old Counsel
+
+Old Counsel is a conversation built on this corpus. The repository holds the texts and the prompt.
+
+- `prompt/persona_v22.md` is the system persona. It goes first.
+- `prompt/persona_v22_reminder.md` goes after the source text.
+
+`scripts/build_prompt.py` assembles the full system prompt from those files and from source text set F. The order is the persona, then set F, then the reminder. One header line sits between the persona and the texts:
+
+```
+# Your memory: the writings of the Stoics (old public-domain translations; never quote or cite them)
+```
+
+That join is the one the runner used: the persona file, then a blank line, then the header, then set F, then a blank line, then the reminder.
+
+Set F is the source text the model sees. Measured from the files in this repository, it is 992,644 characters and 225,271 tokens in the tiktoken encoding `o200k_base`. The assembled system prompt is 997,660 characters and 226,360 tokens in that same encoding. `prompt/meta.json` records both figures. The model is `google/gemini-3.6-flash`, called through OpenRouter, at temperature 0.7. API keys stay out of the repository.
+
+Set F contains only these works, in this order:
+
+- Epictetus, *Encheiridion* (George Long, 1877)
+- Epictetus, *Discourses* books 1 and 3 (George Long, 1877). Books 2 and 4, and the fragments, stay in the corpus and out of the prompt.
+- Musonius Rufus, *Lectures and Fragments*, the English text already in this repository (Blake Raymond, 2026, from Otto Hense's 1905 Greek edition, released under CC0). Cora E. Lutz's 1947 translation is still under copyright in Canada and is not used.
+- Marcus Aurelius, *Meditations* (George Long, 1862)
+- Seneca, *Moral Letters to Lucilius* 1, 2, 5, 7, 13, 16, 18, 24, 28, 47, 65, 78, 104, 107, and 123 (Richard Mott Gummere, 1925). The other letters stay in the corpus.
+- Seneca, *On the Shortness of Life* (Aubrey Stewart, 1889)
+- Seneca, *On Peace of Mind* (Aubrey Stewart, 1889)
+
+Passage formatting follows the eval builder. Each work opens with a line `===== Author, Title (tr. Translator, Year) =====`. Each passage is `[passage id]` and then the passage text. Files that have no `##` heading keep their markdown title in the passage. Files that do have `##` headings yield one passage per heading.
+
+Every translation in set F is public domain in the United States and in Canada, or, for the Musonius text, dedicated to the public domain under CC0 by its translator. The same rule covers the rest of the corpus. See Licensing.
+
+The script writes the assembled prompt to `prompt/out/`. That directory is not committed, because it repeats `texts/`. Rebuild and check:
+
+```bash
+python scripts/build_prompt.py
+python scripts/build_prompt.py --check
+```
+
+The pre-order page lives in `site/`. Deploying it is a separate step, described in `site/README.md`, and is not part of regenerating the corpus.
+
 ## Scope
 
 **Core.** The complete ethical works that survive in a public-domain English translation:
@@ -153,6 +193,13 @@ python scripts/tag_passages.py
 python scripts/tag_passages.py --check
 ```
 
+The Old Counsel prompt:
+
+```bash
+python scripts/build_prompt.py
+python scripts/build_prompt.py --check
+```
+
 Tests, which also check that every file named in the manifest exists and that the counts and tags are reproducible:
 
 ```bash
@@ -167,7 +214,7 @@ python scripts/count_tokens.py
 python scripts/tag_passages.py
 ```
 
-The checked-in texts are already the output of that build. Continuous integration runs the count check, the tag check, and `pytest`. It does not download the sources.
+The checked-in texts are already the output of that build. Continuous integration runs the count check, the tag check, the prompt check, and `pytest`. It does not download the sources.
 
 ## Layout
 
@@ -175,10 +222,15 @@ The checked-in texts are already the output of that build. Continuous integratio
 catalog.yaml                 bibliographic records, no counts
 manifest.json                catalog plus measured word and token counts
 texts/                       one Markdown tree per work
+prompt/persona_v22.md        Old Counsel system persona, verbatim
+prompt/persona_v22_reminder.md
+prompt/meta.json             measured size of set F and the assembled prompt
 annotations/function-tags.jsonl
 schema/function-tags.md      how to read the tags
 scripts/build_corpus.py      rebuild the texts from the sources
+scripts/build_prompt.py      assemble the Old Counsel system prompt
 scripts/count_tokens.py      recompute counts
 scripts/tag_passages.py      recompute the heuristic tags
 tests/test_corpus.py
+site/                        oldcounsel.com pre-order page (see site/README.md)
 ```
