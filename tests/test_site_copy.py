@@ -48,11 +48,20 @@ def test_example_reply_is_verbatim():
 
 def test_launch_date_has_one_source():
     config = (SITE / "src" / "config.ts").read_text(encoding="utf-8")
-    assert 'export const LAUNCH_DATE = "[LAUNCH DATE]"' in config
-    for name in ("index.html", "thanks.html"):
-        html = (SITE / "public" / name).read_text(encoding="utf-8")
+    assert 'export const LAUNCH_DATE = "2027"' in config
+    index = (SITE / "public" / "index.html").read_text(encoding="utf-8")
+    thanks = (SITE / "public" / "thanks.html").read_text(encoding="utf-8")
+    for html in (index, thanks):
         assert "__LAUNCH_DATE__" in html
         assert "[LAUNCH DATE]" not in html
+        assert "2027" not in html
+    assert "Old Counsel opens in __LAUNCH_DATE__." in index
+    assert "Not open by the end of __LAUNCH_DATE__? Full refund, automatically." in index
+    assert index.count("if it hasn't opened by the end of __LAUNCH_DATE__.") == 2
+    assert "when it opens in __LAUNCH_DATE__." in thanks
+    wrangler = (SITE / "wrangler.jsonc").read_text(encoding="utf-8")
+    assert '"pattern": "oldcounsel.com"' in wrangler
+    assert '"custom_domain": true' in wrangler
 
 
 def test_payment_link_and_reference_id():

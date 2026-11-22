@@ -1,9 +1,9 @@
 /**
- * The only place the opening date is written.
- * Leave the placeholder until a real date is chosen, then change this string.
- * The pages, the sheet, the FAQ, and the JSON-LD all read it from here.
+ * The only place the opening year is written.
+ * The sheet, the FAQ, the JSON-LD, and /thanks all read it from here.
+ * Those sentences expect a year, not a calendar day.
  */
-export const LAUNCH_DATE = "[LAUNCH DATE]";
+export const LAUNCH_DATE = "2027";
 
 export const OFFER = "lifetime_49_preorder";
 

@@ -17,6 +17,10 @@
     // The Worker rewrites __LAUNCH_DATE__ in HTML, and it owns /api and /thanks.
     "run_worker_first": true
   },
+  // oldcounsel.com is on this Cloudflare account. Deploy attaches the Worker to that hostname.
+  "routes": [
+    { "pattern": "oldcounsel.com", "custom_domain": true }
+  ],
   "d1_databases": [
     {
       "binding": "DB",

@@ -17,7 +17,7 @@ The dev server listens on http://127.0.0.1:8787. `/` is the page. `/thanks?sessi
 
 ## Launch date
 
-The opening date is one string, `LAUNCH_DATE` in `src/config.ts`. It is still `[LAUNCH DATE]`. The Worker replaces `__LAUNCH_DATE__` in the HTML, including the sheet, the FAQ, and the FAQ JSON-LD. Change that constant when a date is chosen. The sentence beside the pay button on the Stripe payment link has the same placeholder, and Stripe has to be updated separately.
+The opening year is one string, `LAUNCH_DATE` in `src/config.ts`. It is `2027`. The Worker replaces `__LAUNCH_DATE__` in the HTML, including the sheet, the FAQ, and the FAQ JSON-LD. The sentences are written for a year: "opens in 2027" and "by the end of 2027". The sentence beside the pay button on the Stripe payment link is separate and is not changed from this repo.
 
 ## What the page does
 
@@ -92,22 +92,21 @@ Point the Stripe endpoint at `https://oldcounsel.com/api/stripe/webhook` and sub
 
 ## Deploy
 
-Do this only when the site should actually go live. Registering oldcounsel.com is separate, and this repo does not do it.
+Do this only when the site should actually go live. oldcounsel.com is already on Cloudflare. `wrangler.jsonc` routes this Worker to that hostname as a custom domain, so deploy attaches it. This repo does not run the deploy.
 
 1. `cd site && npm install`
-2. `npx wrangler login`
+2. `npx wrangler login` with the account that holds oldcounsel.com
 3. `npx wrangler d1 create old-counsel-events`
 4. Replace the placeholder `database_id` in `wrangler.jsonc` with the id that command prints.
 5. `npx wrangler d1 migrations apply old-counsel-events --remote`
 6. `npx wrangler secret put STRIPE_WEBHOOK_SECRET`
 7. `npx wrangler deploy`
 
-Deploy publishes a `*.workers.dev` hostname. Attach oldcounsel.com only after the domain is on the same Cloudflare account. Add this to `wrangler.jsonc` and deploy again:
+The route already in the config is:
 
 ```jsonc
 "routes": [
-  { "pattern": "oldcounsel.com", "custom_domain": true },
-  { "pattern": "www.oldcounsel.com", "custom_domain": true }
+  { "pattern": "oldcounsel.com", "custom_domain": true }
 ]
 ```
 
