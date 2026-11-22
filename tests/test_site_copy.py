@@ -109,9 +109,10 @@ def test_refund_links_and_copy():
     wrangler = (SITE / "wrangler.jsonc").read_text(encoding="utf-8")
     assert index.count('href="/refund"') == 1
     assert thanks.count('href="/refund"') == 1
-    assert ">Get a refund</a>" in index
+    assert 'href="/refund">get a refund</a> any time' in index
     assert ">Get a refund</a>" in thanks
-    assert "get a refund at https://oldcounsel.com/refund" in index
+    assert "Before then, get a refund any time, or email help@oldcounsel.com." in index
+    assert "https://oldcounsel.com/refund" not in index
     assert "Enter the email from your pre-order." in refund
     assert "Email <a href=\"mailto:help@oldcounsel.com\">help@oldcounsel.com</a> and you'll be refunded in full." in refund
     assert "5 to 10 business days" in copy
