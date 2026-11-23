@@ -1,14 +1,12 @@
-"""Site copy keeps the spec, the real reply, and Blake's wording rules."""
+"""Site copy keeps the spec and Blake's wording rules."""
 
 from __future__ import annotations
 
-import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "site"
-REPLY_PATH = ROOT / "tests" / "fixtures" / "example_reply_I_P4_pay_cut_r0.json"
 QUESTION = (
     "I'm 45, have about $950k invested, $70k in cash and no debt, and I spend about $42k a year. "
     "My job pays $180k but demands 60-hour weeks. I've been offered a remote job paying $75k for "
@@ -16,8 +14,8 @@ QUESTION = (
     "Is it foolish to walk away from that much money for my time?"
 )
 
-# The title and social cards keep the em dash from the mockup. Body copy does not.
-HEAD_EM_DASH = "Old Counsel — Talk to the Stoics"
+# Titles use a middle dot. Body copy and titles do not use an em dash.
+HEAD_TITLE = "Old Counsel · Talk to the Stoics"
 
 
 def visible_text(html: str) -> str:
@@ -34,16 +32,21 @@ def body(html: str) -> str:
     return match.group(1)
 
 
-def test_example_reply_is_verbatim():
+def test_examples_replace_the_pay_cut_thread():
     html = (SITE / "public" / "index.html").read_text(encoding="utf-8")
-    block = re.search(r'data-verbatim="reply">(.*)</div>\s*<button', html, re.S)
-    assert block
-    paragraphs = re.findall(r"<p>(.*?)</p>", block.group(1), re.S)
-    text = "\n\n".join(paragraphs)
-    expected = json.loads(REPLY_PATH.read_text(encoding="utf-8"))["text"]
-    assert text == expected
-    assert QUESTION in html
+    assert QUESTION not in html
+    assert "950k" not in html
+    assert "financial suicide" not in html.lower()
+    assert "Seneca observed" not in html
+    assert "Read the full reply" not in html
+    assert "An example" not in html
     assert "illustrative" not in html.lower()
+    assert ">Examples</span>" in html
+    assert "A coworker takes credit for my work in meetings." in html
+    assert "My sister and I haven't spoken in two years." in html
+    assert "I've been offered a job in another city." in html
+    assert 'role="tablist"' in html
+    assert html.count('role="tab"') == 3
 
 
 def test_live_product_copy():
@@ -72,18 +75,26 @@ def test_live_product_copy():
     assert "What if I want a refund?" in index
     assert "What if it never opens?" not in index
     assert "First conversation free. Then $19 a month." in index
-    assert "One plan. Two ways to pay." in index
+    assert "One plan. Two ways to pay." not in index
     assert "Your first conversation is free. Eight replies." in index
     assert "Then $19 a month." in index
-    assert "Or $180 a year. That's $15 a month." in index
-    assert "Up to 100 replies a month." in index
+    assert "Or $180 a year. That's $15 a month." not in index
+    assert "Billed $180 yearly" in index
+    assert "100 replies a month" in index
     assert "What does it cost?" in index
     assert "What happens after 100 replies?" in index
     assert 'data-cancel hidden' in index
-    assert "Cancel any time." in index
+    assert "Cancel anytime" in index
     assert "Yes. Any time, from the link in your receipt." in index
-    assert "Or $249 once. Up to 100 replies a month, for as long as Old Counsel runs." in index
-    assert "spots left" not in index
+    assert "for as long as Old Counsel runs" not in index
+    assert "Get founding access" in index
+    assert 'data-plan="yearly"' in index
+    assert 'data-plan="founding"' in index
+    assert "data-founding hidden" in index
+    assert "100 spots left" in index
+    assert "price_" not in index
+    assert 'href="/privacy"' not in index
+    assert 'href="/terms"' not in index
     assert "You can talk now." in thanks
     assert "Lifetime access is yours" not in thanks
     assert "Paid once?" in thanks
@@ -105,7 +116,12 @@ def test_checkout_is_created_on_the_server():
     assert "client_reference_id" in billing
     assert "STRIPE_PRICE_MONTHLY" in (SITE / "src" / "stripe-env.ts").read_text(encoding="utf-8")
     assert "price_1" not in billing
+    assert "price_" not in home
     assert "/api/offer" in home
+    assert "/api/checkout" in home
+    assert 'JSON.stringify({ plan: plan })' in home
+    assert "Stuck on a hard choice?" not in home
+    assert "Not another" not in home
 
 
 def test_banned_words_are_absent_from_site_copy():
@@ -139,11 +155,70 @@ def test_banned_words_are_absent_from_site_copy():
     assert not re.search(r"\bremember\w*\b", lowered)
     assert not re.search(r"(?<![&\w])#[A-Za-z]", visible)
     bodies = body(index) + body(thanks) + body(refund) + body(chat_html) + scripts + refund_js + chat_src
-    verbatim = re.search(r'data-verbatim="reply">.*?</div>\s*<button', index, re.S)
-    assert verbatim
-    bodies = bodies.replace(verbatim.group(0), "")
     assert "\u2014" not in bodies
-    assert HEAD_EM_DASH in index
+    assert "\u2014" not in index
+    assert HEAD_TITLE in index
+    assert "225,000" not in visible
+    assert "in full, not summarized" not in visible
+    assert "for as long as Old Counsel runs" not in visible
+    assert "free to try" not in lowered
+    assert "free to start" not in lowered
+
+
+def test_landing_page_fixes():
+    index = (SITE / "public" / "index.html").read_text(encoding="utf-8")
+    home = (SITE / "public" / "home.js").read_text(encoding="utf-8")
+    thanks = (SITE / "public" / "thanks.html").read_text(encoding="utf-8")
+    refund = (SITE / "public" / "refund.html").read_text(encoding="utf-8")
+    chat = (SITE / "web" / "index.html").read_text(encoding="utf-8")
+    hero = (
+        "Tell it what's wrong. It helps you think clearly about a hard choice, "
+        "a hard person or a hard day. In the voice of Epictetus, Seneca, "
+        "Musonius Rufus and Marcus Aurelius. Plain words."
+    )
+    assert hero in index
+    assert hero in home
+    assert "It does the thinking with you." in index
+    assert "Nothing hidden." in index
+    assert "The prompt and the texts are public." in index
+    assert "about 180,000 words, roughly 600 pages." in index
+    assert ">The prompt</a>" in index
+    assert ">The prompt</a>" in thanks
+    assert ">The prompt</a>" in refund
+    assert ">Open source</a>" not in index + thanks + refund
+    assert "https://988lifeline.org" in index
+    assert "https://988.ca" in index
+    assert "https://findahelpline.com" in index
+    assert "call or text" in index
+    assert "What happens to what you tell it" not in index
+    assert "[CONFIRM]" not in index
+    image = 'content="https://oldcounsel.com/og-image.png"'
+    card = 'name="twitter:card" content="summary_large_image"'
+    assert image in index
+    assert image in thanks
+    assert image in refund
+    assert image in chat
+    assert card in index
+    assert card in thanks
+    assert card in refund
+    assert card in chat
+    assert (SITE / "public" / "og-image.png").is_file()
+    sitemap = (SITE / "public" / "sitemap.xml").read_text(encoding="utf-8")
+    assert "<loc>https://oldcounsel.com/</loc>" in sitemap
+    assert "<loc>https://oldcounsel.com/chat</loc>" in sitemap
+    assert "<loc>https://oldcounsel.com/refund</loc>" in sitemap
+    assert "/privacy" not in sitemap
+    assert "/terms" not in sitemap
+    assert "/thanks" not in sitemap
+    robots = (SITE / "public" / "robots.txt").read_text(encoding="utf-8")
+    assert "Sitemap: https://oldcounsel.com/sitemap.xml" in robots
+    assert "ai-train" in robots
+    assert "content signals" in robots
+    assert "Billed monthly" in home
+    assert "founding_full" in home
+    lead = (SITE / "web" / "src" / "copy.ts").read_text(encoding="utf-8")
+    assert "for as long as Old Counsel runs" not in lead
+    assert "Or $249 once. Up to 100 replies a month." in lead
 
 
 def test_refund_links_and_copy():

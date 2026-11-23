@@ -95,3 +95,48 @@ footer a{color:var(--muted)}
   .sheet{border-radius:22px;max-height:calc(100dvh - 3rem)}
   .chat-dock .cta{min-width:8rem}
 }
+
+.example-tabs{display:flex;flex-wrap:wrap;gap:.45rem .7rem;margin:0 0 1.15rem}
+.example-tabs button{font:inherit;font-size:.95rem;font-weight:500;line-height:1.2;color:var(--ink-2);background:transparent;border:0;border-bottom:2px solid transparent;padding:.2rem 0;cursor:pointer}
+.example-tabs button:hover{color:var(--ink)}
+.example-tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.example-tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.example-panel[hidden]{display:none !important}
+
+.pricing{padding:4.5rem 0 5rem}
+.pricing-wrap{max-width:68rem;margin:0 auto;padding:0 1.375rem}
+.pricing h2{font-weight:500;font-size:clamp(1.75rem,6.5vw,2.35rem);line-height:1.12;letter-spacing:-.01em;margin:0 0 1.35rem;text-align:center}
+.billing-toggle{display:flex;justify-content:center;margin:0 0 2.25rem}
+.billing-toggle .toggle{display:inline-flex;align-items:center;background:var(--paper-2);border:1px solid var(--rule);border-radius:999px;padding:4px;gap:2px}
+.billing-toggle button{font:inherit;font-size:1rem;font-weight:500;line-height:1.2;color:var(--ink-2);background:transparent;border:0;border-radius:999px;padding:.5rem 1.15rem;cursor:pointer;display:inline-flex;align-items:center;gap:.45rem}
+.billing-toggle button:hover{color:var(--ink)}
+.billing-toggle button[aria-pressed="true"]{background:var(--card, #fffdf8);color:var(--ink);box-shadow:0 1px 2px rgba(42,36,31,.08)}
+.billing-toggle button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pricing .save{display:inline-block;font-size:.72rem;font-weight:500;font-style:normal;letter-spacing:.01em;line-height:1;color:var(--accent-ink);background:var(--accent);border-radius:999px;padding:.22rem .45rem;vertical-align:middle}
+.pricing .plans{display:grid;grid-template-columns:1fr;gap:1rem;align-items:stretch}
+.pricing .plan{display:flex;flex-direction:column;background:#fffdf8;border:1px solid var(--rule);border-radius:18px;padding:1.7rem 1.45rem 1.4rem;min-width:0}
+.pricing .plan[hidden]{display:none !important}
+.pricing .plan.featured{border-color:var(--accent);border-width:2px;box-shadow:0 10px 28px rgba(140,63,34,.1)}
+.pricing .plan-name{font-size:1.15rem;font-weight:600;margin:0 0 .85rem}
+.pricing .plan-price{font-size:3rem;font-weight:500;line-height:1;letter-spacing:-.02em;margin:0 0 .4rem}
+.pricing .plan-price .period{font-size:1.05rem;font-weight:400;letter-spacing:0;color:var(--ink-2);margin-left:.15rem}
+.pricing .plan-note{font-size:.98rem;color:var(--ink-2);margin:0 0 1.2rem;min-height:1.5em}
+.pricing .plan-spots{color:var(--accent)}
+.pricing .plan-features{list-style:none;padding:0;margin:0 0 1.5rem;flex:1}
+.pricing .plan-features li{position:relative;padding:.28rem 0 .28rem 1.45rem;color:var(--ink)}
+.pricing .plan-features li[hidden]{display:none !important}
+.pricing .plan-features li::before{content:"";position:absolute;left:0;top:.72em;width:.7rem;height:.35rem;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg) translateY(-50%)}
+.pricing .cta{appearance:none;-webkit-appearance:none;display:block;width:100%;min-width:0;text-align:center;font:inherit;font-weight:500;font-size:1.1rem;background:var(--accent);color:var(--accent-ink);border:1px solid var(--accent);border-radius:999px;padding:.9rem 1.25rem;cursor:pointer;text-decoration:none;transition:transform .08s ease, background .15s, border-color .15s, color .15s}
+.pricing .cta:hover{background:#7a361c;border-color:#7a361c}
+.pricing .cta:active{transform:scale(.985)}
+.pricing .cta:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.pricing .cta:disabled{opacity:.65;cursor:default;transform:none}
+.pricing .cta-ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.pricing .cta-ghost:hover{background:var(--paper-2);border-color:var(--ink-2);color:var(--ink)}
+.pricing-note{color:var(--accent);text-align:center;margin:1.15rem 0 0}
+.pricing-note[hidden]{display:none}
+@media (min-width:900px){
+  .pricing .plans{grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem}
+  .pricing .plans:has(> .plan[hidden]){grid-template-columns:repeat(2,minmax(0,1fr));max-width:44rem;margin-inline:auto}
+  .pricing .plan{padding:1.85rem 1.6rem 1.5rem}
+}

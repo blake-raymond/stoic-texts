@@ -19,17 +19,11 @@ Chat needs `OPENROUTER_API_KEY` and `ACCESS_SIGNING_SECRET` (at least 16 charact
 
 ## What the page does
 
-The example is a real reply from the eval on source set F. The question and the reply are unedited. The reply is long, so the first paragraph shows and the rest opens with "Read the full reply". No words are removed. `prompt/meta.json` still records that eval (`google/gemini-3.6-flash`, o200k tokens). The live chat model is `CHAT_MODEL` in `src/config.ts`.
+The landing examples are three short written exchanges: a coworker, a sibling, and a decision. They are not a live model reply. `prompt/meta.json` still records the source-set F eval (`google/gemini-3.6-flash`, o200k tokens). The live chat model is `CHAT_MODEL` in `src/config.ts`.
 
-Hero hooks: the default page, `?v=b`, and `?v=c`. The choice sticks in `localStorage` under `oc_v`.
+The hero is the default copy. `?v=b` and `?v=c` do not change it. `track.js` still records variant `a`, `b`, or `c` when a visit has one stored under `oc_v`.
 
-"Start a conversation" goes to `/chat`. "Get lifetime access" opens the sheet, then goes to:
-
-```
-https://buy.stripe.com/5kQ6oJakdaKugGS2SNfw404?client_reference_id=<button>_<variant>
-```
-
-The chat paywall uses `chat`. `<variant>` is `a`, `b`, or `c`. Stripe Checkout stores the anonymous id as `client_reference_id`.
+"Start a conversation" goes to `/chat`. Subscribe and Get founding access post `{ plan }` to `/api/checkout`. The Worker creates the Checkout Session. The chat paywall uses the same route. Stripe stores the anonymous id as `client_reference_id`.
 
 ## Chat
 
@@ -54,7 +48,7 @@ Returning on another device: if the email binding can send and `ACCESS_SIGNING_S
 | `link_click` | a repo or X link is clicked |
 | `cta_click` | a landing button, including one that goes to `/chat` |
 | `door_view` | the sheet opens |
-| `checkout_click` | the pay button in the sheet |
+| `checkout_click` | a pay button, on the pricing section (`offer`) or the chat paywall (`chat`) |
 | `door_close` | the sheet is dismissed |
 | `purchase_return` | `/thanks` loads, including `session_id` |
 | `purchase` | Stripe `checkout.session.completed`, once the webhook secret is set |
