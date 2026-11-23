@@ -20,11 +20,13 @@ jobs:
         run: python scripts/tag_passages.py --check
       - name: Old Counsel prompt matches the texts
         run: python scripts/build_prompt.py --check
+      - name: Assemble the system prompt for the Worker
+        run: python scripts/build_prompt.py
       - name: Corpus tests
         run: pytest
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Refund tests
+      - name: Site check, tests, and chat bundle
         working-directory: site
-        run: node --experimental-strip-types --test src/refund-stripe.test.ts
+        run: npm ci && npm test && npm run check && npm run build:web

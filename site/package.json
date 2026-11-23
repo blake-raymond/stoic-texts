@@ -3,15 +3,24 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
+    "prompt": "python3 ../scripts/build_prompt.py",
+    "build:web": "vite build --config web/vite.config.ts",
+    "dev": "npm run prompt && npm run build:web && wrangler dev",
     "types": "wrangler types --include-runtime false",
-    "check": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test src/refund-stripe.test.ts",
+    "check": "tsc --noEmit && tsc -p web/tsconfig.json --noEmit",
+    "test": "node --experimental-strip-types --test src/*.test.ts",
     "migrate:local": "wrangler d1 migrations apply old-counsel-events --local"
   },
   "devDependencies": {
+    "@assistant-ui/react": "^0.15.38",
     "@cloudflare/workers-types": "^5.20261122.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "typescript": "^5.7.2",
+    "vite": "^8.3.8",
     "wrangler": "^4.50.0"
   }
 }

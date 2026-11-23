@@ -34,8 +34,9 @@
     {
       "binding": "DB",
       "database_name": "old-counsel-events",
-      // Placeholder. Replace with the id from `npx wrangler d1 create old-counsel-events` before any deploy.
-      "database_id": "00000000-0000-4000-8000-000000000001",
+      // Existing empty database on Blake's account. Do not create another one.
+      // Remote migrations are applied by hand, not by this repo.
+      "database_id": "92147965-54f1-4d4d-b8a3-3cb75e65d9e3",
       "migrations_dir": "migrations"
     }
   ]

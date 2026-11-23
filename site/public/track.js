@@ -1,5 +1,5 @@
 (function () {
-  var OFFER = "lifetime_49_preorder";
+  var OFFER = "subscription";
   var VARIANTS = { a: 1, b: 1, c: 1 };
   var UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
 

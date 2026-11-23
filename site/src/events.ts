@@ -1,4 +1,4 @@
-import { OFFER } from "./config";
+import { OFFER } from "./config.ts";
 
 export const PUBLIC_EVENTS = [
   "page_view",
@@ -14,7 +14,7 @@ export const PUBLIC_EVENTS = [
 ] as const;
 
 const CTA_EVENTS = new Set(["cta_click", "door_view", "door_close", "checkout_click"]);
-const CTAS = new Set(["hero", "example", "offer", "close"]);
+const CTAS = new Set(["hero", "example", "offer", "close", "chat"]);
 const VARIANTS = new Set(["a", "b", "c"]);
 const DEPTHS = new Set([25, 50, 75, 100]);
 const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
@@ -192,13 +192,15 @@ export function purchaseEvent(input: {
   sessionId: string;
   clientReferenceId: string | null;
   stripeEventId: string;
+  offer?: string;
 }): EventRow {
+  const offer = input.offer === "founding_249" || input.offer === "subscription" ? input.offer : OFFER;
   const parts = clientReferenceParts(input.clientReferenceId);
   const variant = parts.variant && VARIANTS.has(parts.variant) ? parts.variant : null;
   const cta = parts.cta && CTAS.has(parts.cta) ? parts.cta : null;
   const props: Record<string, unknown> = {
     event: "purchase",
-    offer: OFFER,
+    offer,
     ts: input.now,
     session_id: input.sessionId,
     stripe_event_id: input.stripeEventId,
@@ -209,7 +211,7 @@ export function purchaseEvent(input: {
   return {
     name: "purchase",
     variant: variant ?? "",
-    offer: OFFER,
+    offer,
     cta,
     sessionId: input.sessionId,
     clientReferenceId: input.clientReferenceId,

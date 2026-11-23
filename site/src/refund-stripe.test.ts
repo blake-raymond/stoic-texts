@@ -37,6 +37,7 @@ interface World {
   refundStatus?: (paymentIntentId: string) => { status: number; json: unknown };
   sessionPages?: Record<string, unknown>[][];
   brokenList?: boolean;
+  foundingSessions?: Record<string, unknown>[];
 }
 
 function charge(overrides: Partial<StripeCharge> = {}): StripeCharge {
@@ -210,6 +211,9 @@ function answer(
   if (state.brokenList && method === "GET" && path === "/v1/checkout/sessions") {
     return { status: 200, json: pageOf([{}], true) };
   }
+  if (method === "GET" && path === "/v1/checkout/sessions/search") {
+    return { status: 200, json: pageOf(state.foundingSessions ?? [], false) };
+  }
   if (method === "GET" && path === "/v1/checkout/sessions") {
     if (state.sessionPages) {
       const cursor = url.searchParams.get("starting_after");
@@ -380,6 +384,31 @@ test("other Stripe refund errors are not treated as success", async () => {
     () => refundCharges(["pi_meta"], stripeTransport(fetchImpl, "rk_test_mock")),
     (error: unknown) => error instanceof StripeApiError && error.code === "charge_disputed",
   );
+});
+
+test("a founding lifetime charge is refundable when its price id is configured", async () => {
+  const state = world();
+  state.foundingSessions = [{
+    id: "cs_founding",
+    mode: "payment",
+    payment_intent: "pi_founding",
+    payment_status: "paid",
+    status: "complete",
+    amount_total: 24900,
+    metadata: { offer: "founding_249" },
+    customer_details: { email: BUYER },
+  }];
+  state.retrieved.pi_founding = intent(
+    "pi_founding",
+    { offer: "founding_249" },
+    BUYER,
+    charge({ id: "ch_founding", amount: 24900 }),
+  );
+  const { fetch: fetchImpl } = install(state);
+  const findings = await findOldCounselCharges(BUYER, stripeTransport(fetchImpl, "rk_test_mock"), "price_foundingEnv");
+  assert.equal(findings.some((finding) => finding.id === "pi_founding" && finding.state === "refund"), true);
+  const withoutPrice = await findOldCounselCharges(BUYER, stripeTransport(install(world()).fetch, "rk_test_mock"));
+  assert.equal(withoutPrice.some((finding) => finding.id === "pi_founding"), false);
 });
 
 test("matching helpers reject lookalikes and bad emails", () => {

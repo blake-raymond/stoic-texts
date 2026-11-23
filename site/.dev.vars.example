@@ -1,4 +1,18 @@
-# Copy to .dev.vars to exercise the webhook or the refund form locally.
-# Leave a secret unset and that route stays closed.
+# Copy to .dev.vars. Leave a secret unset and that route stays closed.
 # STRIPE_WEBHOOK_SECRET=
 # STRIPE_REFUND_KEY=
+# OPENROUTER_API_KEY=
+# ACCESS_SIGNING_SECRET=
+# Point these at a local mock. Unset, they are the real OpenRouter and Stripe APIs.
+# OPENROUTER_API_BASE=http://127.0.0.1:8791/v1/chat/completions
+# STRIPE_API_BASE=http://127.0.0.1:8791
+# DAILY_SPEND_LIMIT_USD=50
+# CHAT_RATE_ANON_PER_HOUR=30
+# CHAT_RATE_IP_PER_HOUR=60
+# Stripe price ids. Unset, that plan's checkout stays closed and founding stays hidden.
+# STRIPE_PRICE_MONTHLY=price_...
+# STRIPE_PRICE_YEARLY=price_...
+# STRIPE_PRICE_FOUNDING=price_...
+# Set to 1 only after the Customer Portal is configured. Otherwise "Cancel any time" stays hidden.
+# STRIPE_PORTAL_ENABLED=1
+# STRIPE_PORTAL_CONFIGURATION=bpc_...
