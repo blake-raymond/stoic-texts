@@ -28,8 +28,6 @@
   ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach(function (key) {
     if (params.get(key)) utm[key] = params.get(key);
   });
-  var lastCta = null;
-  var opened = 0;
   oc.track("page_view", Object.assign({ referrer: document.referrer || "" }, utm));
 
   var marks = [25, 50, 75, 100];
@@ -79,43 +77,30 @@
     });
   }
 
-  var door = document.getElementById("door");
-  var buy = document.getElementById("door-buy");
-  function openDoor(id) {
-    lastCta = id;
-    opened = Date.now();
-    buy.href = buy.getAttribute("data-base") + "?client_reference_id=" + encodeURIComponent(id + "_" + v);
-    door.classList.add("open");
-    door.setAttribute("aria-hidden", "false");
-    oc.track("cta_click", { cta: id });
-    oc.track("door_view", { cta: id });
-    setTimeout(function () { buy.focus(); }, 50);
-  }
-  function closeDoor() {
-    if (!door.classList.contains("open")) return;
-    door.classList.remove("open");
-    door.setAttribute("aria-hidden", "true");
-    oc.track("door_close", { cta: lastCta, ms_open: Date.now() - opened });
-  }
   document.querySelectorAll("[data-cta]").forEach(function (button) {
     button.addEventListener("click", function () {
-      var id = button.getAttribute("data-cta");
-      if (button.tagName === "A") {
-        oc.track("cta_click", { cta: id });
-        return;
-      }
-      openDoor(id);
+      oc.track("cta_click", { cta: button.getAttribute("data-cta") });
     });
   });
-  document.getElementById("door-x").addEventListener("click", closeDoor);
-  door.addEventListener("click", function (event) { if (event.target === door) closeDoor(); });
-  addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && door.classList.contains("open")) closeDoor();
-  });
-  buy.addEventListener("click", function () {
-    try {
-      sessionStorage.setItem("oc_checkout", JSON.stringify({ cta: lastCta, variant: v }));
-    } catch (e) {}
-    oc.track("checkout_click", { cta: lastCta, ms_open: Date.now() - opened });
-  });
+
+  fetch("/api/offer", { credentials: "same-origin", cache: "no-store" })
+    .then(function (response) { return response.json(); })
+    .then(function (offer) {
+      if (!offer || offer.ok !== true) return;
+      if (offer.portal) {
+        document.querySelectorAll("[data-cancel]").forEach(function (el) {
+          el.hidden = false;
+        });
+      }
+      var remaining = offer.founding && offer.founding.remaining;
+      if (typeof remaining !== "number") return;
+      var label = remaining + (remaining === 1 ? " spot left" : " spots left");
+      document.querySelectorAll("[data-founding]").forEach(function (el) {
+        el.hidden = false;
+      });
+      document.querySelectorAll("[data-spots]").forEach(function (el) {
+        el.textContent = label;
+      });
+    })
+    .catch(function () {});
 })();

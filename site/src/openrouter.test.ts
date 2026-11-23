@@ -30,7 +30,7 @@ test("the system block is byte-identical and the only cached prefix", () => {
     assert.fail("system content should be a cached text block");
   }
   assert.equal(system.content[0].text, PROMPT);
-  assert.deepEqual(system.content[0].cache_control, { type: "ephemeral" });
+  assert.deepEqual(system.content[0].cache_control, { type: "ephemeral", ttl: "1h" });
   assert.equal(JSON.stringify(one.messages[0]), JSON.stringify(two.messages[0]));
   assert.equal(JSON.stringify(one.messages[0]).includes("private"), false);
   assert.deepEqual(one.provider, {
@@ -67,7 +67,7 @@ test("client messages cannot set the system prompt", () => {
 test("the sse reader keeps deltas and the reported cost", async () => {
   const raw = [
     `data: ${JSON.stringify({ choices: [{ delta: { content: "Look " } }] })}\n`,
-    `data: ${JSON.stringify({ choices: [{ delta: { content: "here." } }], usage: { cost: 0.044, prompt_tokens: 308000, completion_tokens: 3, prompt_tokens_details: { cached_tokens: 300000 } } })}\n`,
+    `data: ${JSON.stringify({ choices: [{ delta: { content: "here." } }], usage: { cost: 0.044, prompt_tokens: 308000, completion_tokens: 3, prompt_tokens_details: { cached_tokens: 300000, cache_write_tokens: 0 } } })}\n`,
     "data: [DONE]\n",
   ].join("\n");
   const stream = new Response(raw).body;
@@ -80,6 +80,18 @@ test("the sse reader keeps deltas and the reported cost", async () => {
   assert.equal(result.text, "Look here.");
   assert.equal(result.usage.costMicro, 44_000);
   assert.equal(result.usage.cachedTokens, 300000);
+  assert.equal(result.usage.cacheWriteTokens, 0);
+});
+
+test("a missing cache write can still be read from cache_creation_input_tokens", async () => {
+  const raw = `data: ${JSON.stringify({
+    usage: { prompt_tokens_details: { cached_tokens: 0 }, cache_creation_input_tokens: 308000 },
+  })}\n\ndata: [DONE]\n`;
+  const stream = new Response(raw).body;
+  assert.ok(stream);
+  const result = await consumeOpenRouterSse(stream, () => {});
+  assert.equal(result.usage.cachedTokens, 0);
+  assert.equal(result.usage.cacheWriteTokens, 308000);
 });
 
 test("the assembled prompt is the cached prefix when it has been built", () => {

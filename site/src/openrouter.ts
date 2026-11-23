@@ -31,7 +31,7 @@ export interface OpenRouterBody {
       content: Array<{
         type: "text";
         text: string;
-        cache_control: { type: "ephemeral" };
+        cache_control: { type: "ephemeral"; ttl: "1h" };
       }>;
     }
     | ChatTurn
@@ -68,6 +68,8 @@ export function parseTurns(raw: unknown): { ok: true; turns: ChatTurn[] } | { ok
  * The system block is the whole prompt from build_prompt.py: persona, corpus, reminder.
  * It is passed through unchanged. User turns come after it, so the cached prefix
  * is the same bytes for every person and every request.
+ * The breakpoint is the system block only, with a 1-hour TTL. OpenRouter documents
+ * that explicit ttl "1h" for Claude, including Claude Platform on AWS.
  */
 export function buildChatRequest(systemPrompt: string, turns: ChatTurn[]): OpenRouterBody {
   return {
@@ -89,7 +91,7 @@ export function buildChatRequest(systemPrompt: string, turns: ChatTurn[]): OpenR
           {
             type: "text",
             text: systemPrompt,
-            cache_control: { type: "ephemeral" },
+            cache_control: { type: "ephemeral", ttl: "1h" },
           },
         ],
       },
@@ -123,6 +125,7 @@ export interface StreamUsage {
   promptTokens: number | null;
   completionTokens: number | null;
   cachedTokens: number | null;
+  cacheWriteTokens: number | null;
 }
 
 function numberOrNull(value: unknown): number | null {
@@ -151,6 +154,7 @@ export async function consumeOpenRouterSse(
     promptTokens: null,
     completionTokens: null,
     cachedTokens: null,
+    cacheWriteTokens: null,
   };
   const take = (chunk: string, flush: boolean) => {
     buffer += chunk;
@@ -175,7 +179,8 @@ export async function consumeOpenRouterSse(
           cost?: unknown;
           prompt_tokens?: unknown;
           completion_tokens?: unknown;
-          prompt_tokens_details?: { cached_tokens?: unknown };
+          cache_creation_input_tokens?: unknown;
+          prompt_tokens_details?: { cached_tokens?: unknown; cache_write_tokens?: unknown };
         };
       };
       if (record.error) {
@@ -192,7 +197,10 @@ export async function consumeOpenRouterSse(
         if (cost !== null && cost >= 0) usage.costMicro = Math.round(cost * 1_000_000);
         usage.promptTokens = numberOrNull(record.usage.prompt_tokens);
         usage.completionTokens = numberOrNull(record.usage.completion_tokens);
-        usage.cachedTokens = numberOrNull(record.usage.prompt_tokens_details?.cached_tokens);
+        const details = record.usage.prompt_tokens_details;
+        usage.cachedTokens = numberOrNull(details?.cached_tokens);
+        usage.cacheWriteTokens = numberOrNull(details?.cache_write_tokens)
+          ?? numberOrNull(record.usage.cache_creation_input_tokens);
       }
     }
   };

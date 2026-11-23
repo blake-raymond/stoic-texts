@@ -70,12 +70,20 @@ footer a{color:var(--muted)}
 .chat-log{flex:1;overflow-y:auto;padding:1.25rem 0 1rem}
 .chat-log .msg p:last-child{margin-bottom:0}
 .chat-empty{padding:1.5rem 0 0}
-.chat-dock{position:sticky;bottom:0;background:var(--paper);border-top:1px solid var(--rule);padding:.9rem 0 calc(.9rem + env(safe-area-inset-bottom))}
+.chat-dock{position:sticky;bottom:0;background:var(--paper);border-top:1px solid var(--rule);padding:.9rem 0 calc(.9rem + env(safe-area-inset-bottom));max-height:calc(100dvh - 5.5rem);overflow-y:auto}
 .chat-dock textarea.field{min-height:5.5rem;resize:vertical;margin-bottom:.7rem}
 .chat-panel{background:var(--paper-2);border-radius:18px;padding:1.25rem 1.15rem 1.35rem;margin:0}
 .chat-panel p{color:var(--ink-2)}
 .chat-panel .cta{margin-top:.4rem}
 .chat-error{color:var(--accent);font-style:italic}
+.plans{border:0;margin:.2rem 0 .6rem;padding:0}
+.plans legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.plans label{display:flex;gap:.65rem;align-items:baseline;padding:.55rem 0;border-bottom:1px solid var(--rule);cursor:pointer;color:var(--ink)}
+.plans input{accent-color:var(--accent)}
+.founding-choice{margin-top:1.1rem}
+.founding-choice p{color:var(--ink-2)}
+.text-button{background:none;border:0;padding:.35rem 0;font:inherit;font-style:italic;color:var(--muted);cursor:pointer}
+.chat-panel .text-button{display:block}
 .restore-form{margin-top:.4rem}
 @media (min-width:760px){
   :root{--measure:40rem}

@@ -3,8 +3,9 @@ import { readFileSync } from "node:fs";
 
 export function openTestDb(): { sqlite: DatabaseSync; db: D1Database } {
   const sqlite = new DatabaseSync(":memory:");
-  const sql = readFileSync(new URL("../../migrations/0003_access.sql", import.meta.url), "utf8");
-  sqlite.exec(sql);
+  const migrations = new URL("../../migrations/", import.meta.url);
+  sqlite.exec(readFileSync(new URL("0003_access.sql", migrations), "utf8"));
+  sqlite.exec(readFileSync(new URL("0004_billing.sql", migrations), "utf8"));
   const db = {
     prepare(query: string) {
       const statement = sqlite.prepare(query);

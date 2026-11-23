@@ -51,25 +51,42 @@ def test_live_product_copy():
     thanks = (SITE / "public" / "thanks.html").read_text(encoding="utf-8")
     config = (SITE / "src" / "config.ts").read_text(encoding="utf-8")
     public = (SITE / "src" / "public-config.ts").read_text(encoding="utf-8")
-    link = "https://buy.stripe.com/5kQ6oJakdaKugGS2SNfw404"
-    assert link in public
+    assert "buy.stripe.com" not in public
     assert "LAUNCH_DATE" not in config
+    assert "MONTHLY_REPLY_CAP = 100" in config
+    assert "FOUNDING_BUYER_CAP = 100" in config
+    assert "COLD_REPLY_RESERVE_MICRO_USD = 1_400_000" in config
     for html in (index, thanks):
         assert "2027" not in html
         assert "__LAUNCH_DATE__" not in html
         assert "pre-order" not in html.lower()
         assert "not open yet" not in html.lower()
-    assert index.count('href="/chat"') == 3
-    assert "Get lifetime access" in index
-    assert "Continue to checkout" in index
-    assert "Talk now. Pay only if you want to keep going." in index
+    assert index.count('href="/chat"') == 4
+    assert "Get lifetime access" not in index
+    assert "Continue to checkout" not in index
+    assert "$49" not in index
+    assert "200 replies" not in index
+    assert "One payment. No subscription." not in index
+    assert "What does lifetime mean?" not in index
     assert "How do I come back on another device?" in index
     assert "What if I want a refund?" in index
     assert "What if it never opens?" not in index
-    assert "$49, once. Then up to 200 replies a month, for as long as Old Counsel runs." in index
-    assert "Your first conversation is free." in index
-    assert "One payment. No subscription." in index
-    assert "Lifetime access is yours. You can talk now." in thanks
+    assert "First conversation free. Then $19 a month." in index
+    assert "One plan. Two ways to pay." in index
+    assert "Your first conversation is free. Eight replies." in index
+    assert "Then $19 a month." in index
+    assert "Or $180 a year. That's $15 a month." in index
+    assert "Up to 100 replies a month." in index
+    assert "What does it cost?" in index
+    assert "What happens after 100 replies?" in index
+    assert 'data-cancel hidden' in index
+    assert "Cancel any time." in index
+    assert "Yes. Any time, from the link in your receipt." in index
+    assert "Or $249 once. Up to 100 replies a month, for as long as Old Counsel runs." in index
+    assert "spots left" not in index
+    assert "You can talk now." in thanks
+    assert "Lifetime access is yours" not in thanks
+    assert "Paid once?" in thanks
     assert "We could not confirm that payment." in thanks
     assert "If you were charged, email" in thanks
     assert "__THANKS_STATE__" in thanks
@@ -79,14 +96,16 @@ def test_live_product_copy():
     assert "92147965-54f1-4d4d-b8a3-3cb75e65d9e3" in wrangler
 
 
-def test_payment_link_and_reference_id():
+def test_checkout_is_created_on_the_server():
     html = (SITE / "public" / "index.html").read_text(encoding="utf-8")
     home = (SITE / "public" / "home.js").read_text(encoding="utf-8")
-    link = "https://buy.stripe.com/5kQ6oJakdaKugGS2SNfw404"
-    assert html.count(link) == 2
-    assert 'data-base="' + link + '"' in html
-    assert "client_reference_id=" in home
-    assert "id + \"_\" + v" in home
+    billing = (SITE / "src" / "billing.ts").read_text(encoding="utf-8")
+    assert "buy.stripe.com" not in html
+    assert "buy.stripe.com" not in home
+    assert "client_reference_id" in billing
+    assert "STRIPE_PRICE_MONTHLY" in (SITE / "src" / "stripe-env.ts").read_text(encoding="utf-8")
+    assert "price_1" not in billing
+    assert "/api/offer" in home
 
 
 def test_banned_words_are_absent_from_site_copy():

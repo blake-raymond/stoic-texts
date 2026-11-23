@@ -16,6 +16,7 @@ import {
 import {
   BAD_REQUEST_MESSAGE,
   FREE_LIMIT_MESSAGE,
+  INACTIVE_MESSAGE,
   MONTHLY_CAP_MESSAGE,
   RATE_LIMIT_MESSAGE,
   SPEND_GUARD_MESSAGE,
@@ -33,7 +34,7 @@ export interface HandlerDeps {
   systemPrompt: string;
 }
 
-async function actorHeaders(request: Request, env: Env, secret: string, now: number, actor: Awaited<ReturnType<typeof readActor>>): Promise<Headers> {
+export async function actorHeaders(request: Request, env: Env, secret: string, now: number, actor: Awaited<ReturnType<typeof readActor>>): Promise<Headers> {
   const headers = new Headers();
   const secure = requestIsSecure(request);
   if (actor.anonIsNew) headers.append("set-cookie", await anonCookie(actor.anonId, secret, now, secure));
@@ -79,8 +80,13 @@ export async function handleChat(request: Request, env: Env, deps: HandlerDeps):
 
   const taken = await takeReply(env.DB, actor, now);
   if (!taken.ok) {
-    const message = taken.code === "free_limit" ? FREE_LIMIT_MESSAGE : MONTHLY_CAP_MESSAGE;
-    return json({ ok: false, code: taken.code, message }, taken.code === "free_limit" ? 402 : 429, headers);
+    const message = taken.code === "free_limit"
+      ? FREE_LIMIT_MESSAGE
+      : taken.code === "inactive"
+        ? INACTIVE_MESSAGE
+        : MONTHLY_CAP_MESSAGE;
+    const status = taken.code === "monthly_cap" ? 429 : 402;
+    return json({ ok: false, code: taken.code, message }, status, headers);
   }
 
   const limit = spendLimit(env);
@@ -152,6 +158,7 @@ export async function handleChat(request: Request, env: Env, deps: HandlerDeps):
           tier: actor.grant ? "paid" : "free",
           prompt_tokens: result.usage.promptTokens,
           cached_tokens: result.usage.cachedTokens,
+          cache_write_tokens: result.usage.cacheWriteTokens,
           completion_tokens: result.usage.completionTokens,
           cost_micro: cost,
         }));

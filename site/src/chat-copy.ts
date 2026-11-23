@@ -1,12 +1,15 @@
 // Buyer-facing chat sentences. No em dashes. The page shows these strings as the server sends them.
 
-import { FREE_CONVERSATION_REPLIES, MONTHLY_REPLY_CAP } from "./config.ts";
+import { MONTHLY_REPLY_CAP } from "./config.ts";
 
 export const FREE_LIMIT_MESSAGE =
-  `That was the free conversation: ${FREE_CONVERSATION_REPLIES} replies. Lifetime access is $49, once. Then up to ${MONTHLY_REPLY_CAP} replies a month.`;
+  "That was your free conversation. Eight replies. Keep talking with Old Counsel.";
 
 export const MONTHLY_CAP_MESSAGE =
-  `You've had ${MONTHLY_REPLY_CAP} replies this month. That's the fair use for lifetime access. It resets at the start of next month. Email help@oldcounsel.com if that seems wrong.`;
+  `You've had ${MONTHLY_REPLY_CAP} replies this month. They start again on the 1st. Email help@oldcounsel.com if that seems wrong.`;
+
+export const INACTIVE_MESSAGE =
+  "Your plan isn't active. You can start it again when you're ready.";
 
 export const RATE_LIMIT_MESSAGE = "Too many messages, too quickly. Wait a little, then try again.";
 
@@ -23,7 +26,7 @@ export const RESTORE_HELP =
   "Email help@oldcounsel.com from the address you paid with.";
 
 export const RESTORE_NEUTRAL =
-  "If that email has lifetime access, a code is on its way. It expires in 15 minutes.";
+  "If that email has Old Counsel, a code is on its way. It expires in 15 minutes.";
 
 export const RESTORE_BAD_CODE = "That code did not work.";
 

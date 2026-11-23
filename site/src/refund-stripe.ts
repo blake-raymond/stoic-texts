@@ -1,7 +1,11 @@
-// Stripe lookups and refunds for Old Counsel purchases only.
+// Stripe lookups and refunds for Old Counsel one-time purchases only.
 // The account is shared with say.as. A charge qualifies only when a Checkout
-// Session for PAYMENT_LINK_ID used this email, or the PaymentIntent metadata
-// is the Old Counsel experiment and offer. Everything else is left alone.
+// Session for the retired $49 payment link used this email, a founding lifetime
+// session matches offer founding_249, or the PaymentIntent metadata is the
+// Old Counsel experiment and offer. Subscriptions are not refunded here.
+// PAYMENT_LINK_ID is no longer sold. It stays so a past $49 charge can still be refunded.
+
+import { FOUNDING_CENTS } from "./public-config.ts";
 
 export const PAYMENT_LINK_ID = "plink_1UejbsRssDxlNdX37XKaLinq";
 export const EXPERIMENT = "oldcounsel-fakedoor-nov2026";
@@ -38,10 +42,13 @@ export interface StripePaymentIntent {
 
 export interface StripeSession {
   id: string;
+  mode?: string | null;
   payment_link?: string | { id?: string } | null;
   payment_intent?: string | { id?: string } | null;
   payment_status?: string | null;
   status?: string | null;
+  amount_total?: number | null;
+  metadata?: Record<string, string> | null;
   customer?: string | { id?: string } | null;
   customer_details?: { email?: string | null } | null;
   customer_email?: string | null;
@@ -147,6 +154,17 @@ function emailVariants(raw: string): string[] {
 
 function sessionEmail(session: StripeSession): string {
   return session.customer_details?.email || session.customer_email || "";
+}
+
+function paymentIntentIdFromFoundingSession(session: StripeSession, email: string): string | null {
+  if (session.mode && session.mode !== "payment") return null;
+  if (session.status !== "complete" || session.payment_status !== "paid") return null;
+  if (session.metadata?.offer !== "founding_249") return null;
+  if (session.amount_total !== FOUNDING_CENTS) return null;
+  if (!emailsEqual(sessionEmail(session), email)) return null;
+  const paymentIntentId = idOf(session.payment_intent);
+  if (!paymentIntentId || !/^pi_[A-Za-z0-9]+$/.test(paymentIntentId)) return null;
+  return paymentIntentId;
 }
 
 function paymentIntentIdFromSession(session: StripeSession, email: string): string | null {
@@ -319,6 +337,7 @@ function metadataQuery(): string {
 export async function findOldCounselCharges(
   rawEmail: string,
   transport: StripeTransport,
+  foundingPriceId?: string,
 ): Promise<ChargeFinding[]> {
   const email = normalizeEmail(rawEmail);
   if (!email) return [];
@@ -361,6 +380,20 @@ export async function findOldCounselCharges(
       const session = asSession(row);
       if (!session) continue;
       const paymentIntentId = paymentIntentIdFromSession(session, email);
+      if (paymentIntentId) sessionIds.add(paymentIntentId);
+    }
+  }
+
+  if (foundingPriceId && /^price_[A-Za-z0-9]+$/.test(foundingPriceId)) {
+    const searchedSessions = await searchAll(
+      transport,
+      "/v1/checkout/sessions/search",
+      `metadata["offer"]:"founding_249"`,
+    );
+    for (const row of searchedSessions) {
+      const session = asSession(row);
+      if (!session) continue;
+      const paymentIntentId = paymentIntentIdFromFoundingSession(session, email);
       if (paymentIntentId) sessionIds.add(paymentIntentId);
     }
   }

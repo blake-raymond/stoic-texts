@@ -99,7 +99,7 @@ export const adapter: ChatModelAdapter = {
       } catch {
         // The status is enough.
       }
-      if (code === "free_limit" || code === "monthly_cap") {
+      if (code === "free_limit" || code === "monthly_cap" || code === "inactive") {
         window.dispatchEvent(new CustomEvent<AccessBlock>("oc-block", { detail: { code, message } }));
       }
       throw new Error(message);

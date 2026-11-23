@@ -3,9 +3,13 @@
  * prompt/meta.json still records the eval that measured the prompt (Gemini, o200k tokens).
  * The Worker does not read that file.
  */
-export { PAYMENT_LINK } from "./public-config.ts";
+export { FOUNDING_CENTS, MONTHLY_CENTS, YEARLY_CENTS } from "./public-config.ts";
 
-export const OFFER = "lifetime_49_preorder";
+/** Analytics offer for the subscription. Founding checkouts record founding_249. */
+export const OFFER = "subscription";
+
+/** Paid founding lifetimes, then the offer is retired. */
+export const FOUNDING_BUYER_CAP = 100;
 
 /** Switch models here. Caching below assumes an Anthropic model on OpenRouter. */
 export const CHAT_MODEL = "anthropic/claude-sonnet-5.5";
@@ -27,9 +31,8 @@ export const MAX_OUTPUT_TOKENS = 1200;
  */
 export const FREE_CONVERSATION_REPLIES = 8;
 
-export const MONTHLY_REPLY_CAP = 200;
-
-export const PRICE_CENTS = 4900;
+/** One cap for the subscription and the founding lifetime. UTC calendar month. */
+export const MONTHLY_REPLY_CAP = 100;
 
 /**
  * Planning figure for the system prompt on Claude's tokenizer.
@@ -47,13 +50,12 @@ export const CACHED_REPLY_MICRO_USD = 44_000;
 /**
  * Held against the daily guard before OpenRouter answers, then replaced by the
  * real cost. A cold cache re-bills the whole prompt. Listed prices for
- * claude-sonnet-5.5 on Claude Platform on AWS (per token): input $0.000002,
- * cache write $0.0000025, output $0.00001.
- * 308_000 * $0.0000025 = $0.77 write, plus 1_200 output tokens = $0.012.
- * $0.90 covers that cold reply. The Anthropic cache expires after about 5
- * minutes idle, so a quiet hour is mostly cold writes, not $0.044 hits.
+ * claude-sonnet-5.5 (per token): input $0.000002, 1-hour cache write $0.000004
+ * (2x input), cache read $0.0000001, output $0.00001.
+ * 308_000 * $0.000004 = $1.232 write, plus 1_200 output tokens = $0.012.
+ * $1.40 covers that cold reply. The breakpoint asks for a 1-hour TTL.
  */
-export const COLD_REPLY_RESERVE_MICRO_USD = 900_000;
+export const COLD_REPLY_RESERVE_MICRO_USD = 1_400_000;
 
 /** $50. Override with the DAILY_SPEND_LIMIT_USD var (dollars, not micro-USD). */
 export const DAILY_SPEND_LIMIT_MICRO_USD = 50_000_000;

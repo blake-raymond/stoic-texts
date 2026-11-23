@@ -9,12 +9,20 @@ import {
   rateLimit,
 } from "./config.ts";
 import { accessIdFrom, anonIdFrom, newId } from "./cookies.ts";
-import { FREE_LIMIT_MESSAGE, MONTHLY_CAP_MESSAGE } from "./chat-copy.ts";
-import { PAYMENT_LINK } from "./public-config.ts";
+import { FREE_LIMIT_MESSAGE, INACTIVE_MESSAGE, MONTHLY_CAP_MESSAGE } from "./chat-copy.ts";
+import { sweepFoundingReservations } from "./founding.ts";
+import { portalConfigured } from "./stripe-env.ts";
 
 export interface Grant {
   id: string;
   emailHash: string;
+  kind: string;
+  active: boolean;
+}
+
+export function grantIsActive(kind: string, status: string): boolean {
+  if (kind === "founding") return status === "active";
+  return status === "active" || status === "trialing";
 }
 
 export interface Actor {
@@ -26,7 +34,7 @@ export interface Actor {
 
 export type TakeResult =
   | { ok: true; subject: string; period: string }
-  | { ok: false; code: "free_limit" | "monthly_cap" };
+  | { ok: false; code: "free_limit" | "monthly_cap" | "inactive" };
 
 export function signingSecret(env: Env): string | undefined {
   const value = env.ACCESS_SIGNING_SECRET;
@@ -86,13 +94,18 @@ export async function readActor(db: D1Database, request: Request, secret: string
   const accessId = await accessIdFrom(request, secret, now);
   if (!accessId) return { anonId, anonIsNew: !existing, grant: null, clearAccess: false };
   const grant = await db.prepare(
-    "SELECT id, email_hash FROM access_grants WHERE id = ?1",
-  ).bind(accessId).first<{ id: string; email_hash: string }>();
+    "SELECT id, email_hash, kind, status FROM access_grants WHERE id = ?1",
+  ).bind(accessId).first<{ id: string; email_hash: string; kind: string; status: string }>();
   if (!grant) return { anonId, anonIsNew: !existing, grant: null, clearAccess: true };
   return {
     anonId,
     anonIsNew: !existing,
-    grant: { id: grant.id, emailHash: grant.email_hash },
+    grant: {
+      id: grant.id,
+      emailHash: grant.email_hash,
+      kind: grant.kind,
+      active: grantIsActive(grant.kind, grant.status),
+    },
     clearAccess: false,
   };
 }
@@ -114,6 +127,7 @@ async function increment(
 
 export async function takeReply(db: D1Database, actor: Actor, now: number): Promise<TakeResult> {
   if (actor.grant) {
+    if (!actor.grant.active) return { ok: false, code: "inactive" };
     const period = `month:${utcMonth(now)}`;
     const subject = `paid:${actor.grant.emailHash}`;
     const replies = await increment(db, subject, period, MONTHLY_REPLY_CAP);
@@ -184,6 +198,7 @@ export async function sweepChat(db: D1Database, now: number): Promise<void> {
     .bind(now - 2 * 24 * 60 * 60 * 1000)
     .run();
   await db.prepare("DELETE FROM access_codes WHERE expires_at < ?1").bind(now).run();
+  await sweepFoundingReservations(db, now);
 }
 
 async function repliesUsed(db: D1Database, subject: string, period: string): Promise<number> {
@@ -198,11 +213,25 @@ export async function accessView(db: D1Database, actor: Actor, env: Env, now: nu
   tier: "free" | "paid";
   replies_used: number;
   replies_limit: number;
-  code: "free_limit" | "monthly_cap" | null;
+  code: "free_limit" | "monthly_cap" | "inactive" | null;
   message: string | null;
   restore: "email" | "help";
-  payment_link: string;
+  portal: boolean;
 }> {
+  const restore = emailSendingReady(env) && signingSecret(env) ? "email" : "help";
+  const portal = portalConfigured(env);
+  if (actor.grant && !actor.grant.active) {
+    return {
+      ok: true,
+      tier: "paid",
+      replies_used: 0,
+      replies_limit: MONTHLY_REPLY_CAP,
+      code: "inactive",
+      message: INACTIVE_MESSAGE,
+      restore,
+      portal,
+    };
+  }
   const paid = Boolean(actor.grant);
   const subject = paid ? `paid:${actor.grant!.emailHash}` : `anon:${actor.anonId}`;
   const period = paid ? `month:${utcMonth(now)}` : "free";
@@ -217,7 +246,7 @@ export async function accessView(db: D1Database, actor: Actor, env: Env, now: nu
     replies_limit: limit,
     code,
     message: code === "free_limit" ? FREE_LIMIT_MESSAGE : code === "monthly_cap" ? MONTHLY_CAP_MESSAGE : null,
-    restore: emailSendingReady(env) && signingSecret(env) ? "email" : "help",
-    payment_link: PAYMENT_LINK,
+    restore,
+    portal,
   };
 }

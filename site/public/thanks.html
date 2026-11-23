@@ -3,32 +3,33 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lifetime access. Old Counsel</title>
-<meta name="description" content="Lifetime access to Old Counsel.">
+<title>You're in. Old Counsel</title>
+<meta name="description" content="Access to Old Counsel.">
 <link rel="canonical" href="https://oldcounsel.com/thanks">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://oldcounsel.com/thanks">
-<meta property="og:title" content="Lifetime access. Old Counsel">
-<meta property="og:description" content="Lifetime access to Old Counsel.">
+<meta property="og:title" content="You're in. Old Counsel">
+<meta property="og:description" content="Access to Old Counsel.">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@oldcounselai">
-<meta name="twitter:title" content="Lifetime access. Old Counsel">
-<meta name="twitter:description" content="Lifetime access to Old Counsel.">
+<meta name="twitter:title" content="You're in. Old Counsel">
+<meta name="twitter:description" content="Access to Old Counsel.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/site.css">
 </head>
-<body data-thanks="__THANKS_STATE__">
+<body data-thanks="__THANKS_STATE__" data-kind="__THANKS_KIND__">
 <header class="top"><div class="wrap"><a class="mark" href="/">Old Counsel</a></div></header>
 <main>
 <section class="hero thanks"><div class="wrap">
   <div id="granted" hidden>
     <h1>You're in.</h1>
-    <p class="lede">Lifetime access is yours. You can talk now.</p>
+    <p class="lede">You can talk now.</p>
     <p><a class="cta" href="/chat">Start a conversation</a></p>
     <p>A receipt was emailed to you.</p>
-    <p>Want a refund? <a href="/refund">Get a refund</a>, or email <a href="mailto:help@oldcounsel.com">help@oldcounsel.com</a>.</p>
+    <p id="thanks-cancel" hidden><button class="text-button" type="button" id="portal">Cancel any time.</button></p>
+    <p id="thanks-refund" hidden>Paid once? <a href="/refund">Get a refund</a>, or email <a href="mailto:help@oldcounsel.com">help@oldcounsel.com</a>.</p>
   </div>
   <div id="unconfirmed" hidden>
     <h1>We could not confirm that payment.</h1>

@@ -74,7 +74,13 @@ export async function handleRestoreRequest(request: Request, env: Env, now: numb
   if (limited) return json({ ok: false, message: RESTORE_WAIT }, 429);
 
   const grant = await env.DB.prepare(
-    "SELECT id FROM access_grants WHERE email_hash = ?1 LIMIT 1",
+    `SELECT id FROM access_grants WHERE email_hash = ?1
+     ORDER BY CASE
+       WHEN kind = 'founding' AND status = 'active' THEN 0
+       WHEN status IN ('active', 'trialing') THEN 0
+       ELSE 1
+     END, created_at DESC
+     LIMIT 1`,
   ).bind(hashedEmail).first<{ id: string }>();
   if (!grant) return json({ ok: true, method: "email", message: RESTORE_NEUTRAL });
 
@@ -125,7 +131,13 @@ export async function handleRestoreConfirm(request: Request, env: Env, now: numb
   if (!row || !timingSafeEqual(submitted, stored)) return json({ ok: false, message: RESTORE_BAD_CODE });
 
   const grant = await env.DB.prepare(
-    "SELECT id FROM access_grants WHERE email_hash = ?1 ORDER BY created_at DESC LIMIT 1",
+    `SELECT id FROM access_grants WHERE email_hash = ?1
+     ORDER BY CASE
+       WHEN kind = 'founding' AND status = 'active' THEN 0
+       WHEN status IN ('active', 'trialing') THEN 0
+       ELSE 1
+     END, created_at DESC
+     LIMIT 1`,
   ).bind(hashedEmail).first<{ id: string }>();
   await env.DB.prepare("DELETE FROM access_codes WHERE email_hash = ?1").bind(hashedEmail).run();
   if (!grant) return json({ ok: false, method: "help", message: RESTORE_HELP });

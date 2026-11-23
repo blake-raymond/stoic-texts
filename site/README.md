@@ -1,6 +1,6 @@
 # Old Counsel site
 
-The site for oldcounsel.com. It is a Cloudflare Worker with static assets, a chat page, and a D1 database. Nothing here is deployed from this repository. The payment link is the live Stripe link already created for this offer. The refund route and the `/thanks` access grant call the Stripe API when `STRIPE_REFUND_KEY` is set. This folder holds no key values.
+The site for oldcounsel.com. It is a Cloudflare Worker with static assets, a chat page, and a D1 database. Nothing here is deployed from this repository. Checkout Sessions are created by the Worker from Stripe price ids in the environment. The refund route refunds one-time charges. The `/thanks` page grants access when `STRIPE_REFUND_KEY` is set. This folder holds no key values.
 
 ## Run it locally
 
@@ -29,15 +29,15 @@ Hero hooks: the default page, `?v=b`, and `?v=c`. The choice sticks in `localSto
 https://buy.stripe.com/5kQ6oJakdaKugGS2SNfw404?client_reference_id=<button>_<variant>
 ```
 
-`<button>` is `offer` for the sheet. The chat paywall uses `chat`. `<variant>` is `a`, `b`, or `c`. Stripe Checkout records that value on the session.
+The chat paywall uses `chat`. `<variant>` is `a`, `b`, or `c`. Stripe Checkout stores the anonymous id as `client_reference_id`.
 
 ## Chat
 
 `/chat` is a Vite build of assistant-ui, written to `site/public/chat/` (gitignored) and served by the Worker. The conversation is kept in `localStorage`. The server counts replies and does not store the text.
 
-`FREE_CONVERSATION_REPLIES` in `src/config.ts` is 8: one sitting on one trouble. After that, the server returns `free_limit` and the page offers the $49 payment link. A paid buyer is capped at `MONTHLY_REPLY_CAP` (200) replies per UTC month. Both caps are enforced in D1.
+`FREE_CONVERSATION_REPLIES` in `src/config.ts` is 8: one sitting on one trouble. After that, the server returns `free_limit` and the page offers one plan, $19 a month or $180 a year. A paid buyer, including a founding lifetime, is capped at `MONTHLY_REPLY_CAP` (100) replies per UTC month. Both caps are enforced in D1. The founding lifetime is $249, capped at `FOUNDING_BUYER_CAP` (100) paid buyers.
 
-The model, temperature, and OpenRouter provider pin are `CHAT_MODEL`, `CHAT_TEMPERATURE`, and `OPENROUTER_PROVIDER` in that same file. The system prompt is the byte-identical prefix from `scripts/build_prompt.py`, with `cache_control: { type: "ephemeral" }` on the system block. A cold cache re-bills the whole prompt. The daily spend guard defaults to $50 (`DAILY_SPEND_LIMIT_USD` overrides it) and holds $0.90 per reply until OpenRouter reports the real cost.
+The model, temperature, and OpenRouter provider pin are `CHAT_MODEL`, `CHAT_TEMPERATURE`, and `OPENROUTER_PROVIDER` in that same file. The system prompt is the byte-identical prefix from `scripts/build_prompt.py`, with `cache_control: { type: "ephemeral", ttl: "1h" }` on the system block. A cold cache re-bills the whole prompt at the 1-hour write price, which is 2x input. The daily spend guard defaults to $50 (`DAILY_SPEND_LIMIT_USD` overrides it) and holds $1.40 per reply until OpenRouter reports the real cost. Each reply log includes `cached_tokens` and `cache_write_tokens`.
 
 Returning on another device: if the email binding can send and `ACCESS_SIGNING_SECRET` is set, `/api/access/restore` emails a 6-digit code. Otherwise the page says to email help@oldcounsel.com. Cloudflare Email Sending is not available on the Workers free plan, so a production deploy on that plan uses the help@ sentence.
 
@@ -82,7 +82,7 @@ npx wrangler d1 execute old-counsel-events --local --json --command \
   "SELECT name, IFNULL(cta, '') AS cta, IFNULL(variant, '') AS variant, COUNT(*) AS n FROM events GROUP BY name, cta, variant ORDER BY name, cta, variant;"
 ```
 
-Willingness to pay is paid Checkout Sessions divided by unique page views. Read the paid sessions in Stripe, grouped by `client_reference_id`, for the offer `lifetime_49`. `checkout_click` divided by `cta_click` shows how many people who opened the sheet continued after the "charged today" terms.
+Willingness to pay is paid Checkout Sessions divided by unique page views. `client_reference_id` is the anonymous id. Session metadata `offer` is `subscription` or `founding_249`.
 
 `GET /api/counts` is open and returns only those aggregates. Remove the route before launch if the totals should not be public. The SQL above still works with Wrangler.
 
@@ -105,7 +105,7 @@ Point the Stripe endpoint at `https://oldcounsel.com/api/stripe/webhook` and sub
 
 ## Refunds
 
-`/refund` refunds a buyer who asks. The landing page no longer promises an automatic refund. The refund tool still refunds this payment link.
+`/refund` refunds a one-time purchase: the retired $49 payment link, and a founding lifetime when `STRIPE_PRICE_FOUNDING` is set. Subscription refunds are not handled.
 
 The link "Get a refund" is on `/thanks` and in the FAQ. Both go to `/refund`.
 
@@ -128,19 +128,20 @@ If `STRIPE_REFUND_KEY` is unset, or the email binding has no `send` function, `/
 
 ### Stripe restricted key
 
-Create a restricted key in the Stripe Dashboard. Name it something like `old-counsel-refunds`. Give it only:
+Create a restricted key in the Stripe Dashboard. Name it something like `old-counsel-billing`. Give it:
 
 | Resource | Permission |
 | --- | --- |
 | Customers | Read |
-| Checkout Sessions | Read |
+| Checkout Sessions | Write |
 | Payment Intents | Read |
 | Charges | Read |
 | Refunds | Write |
+| Billing portal sessions | Write |
 
-No other write permission. Refunds Write is the only write. The key starts with `rk_live_` or `rk_test_`. Set it with `npx wrangler secret put STRIPE_REFUND_KEY`. Do not put it in `wrangler.jsonc`. Rotating the key invalidates codes that have not expired yet.
+The key starts with `rk_live_` or `rk_test_`. Set it with `npx wrangler secret put STRIPE_REFUND_KEY`. Do not put it in `wrangler.jsonc`. Rotating the key invalidates codes that have not expired yet.
 
-The Worker reads customers by email, Checkout Sessions for that payment link, and PaymentIntents. It expands `latest_charge` and `customer` before refunding, and posts `POST /v1/refunds` with `payment_intent` and `reason=requested_by_customer`.
+The Worker creates Checkout Sessions, reads customers by email, and reads Payment Intents. It expands `latest_charge` and `customer` before refunding a one-time charge, and posts `POST /v1/refunds` with `payment_intent` and `reason=requested_by_customer`. Subscription refunds are not handled. A founding sale past the 100-buyer cap is refunded with the same call.
 
 ### Email
 
@@ -161,13 +162,15 @@ Do this only when the site should actually go live. oldcounsel.com is already on
 1. `cd site && npm install`
 2. `npx wrangler login` with the account that holds oldcounsel.com
 3. The D1 database already exists. `database_id` is already `92147965-54f1-4d4d-b8a3-3cb75e65d9e3`. Do not create another one.
-4. `npx wrangler d1 migrations apply old-counsel-events --remote` (0001, 0002, and 0003). This repo does not apply remote migrations.
-5. `npx wrangler secret put OPENROUTER_API_KEY`
-6. `npx wrangler secret put ACCESS_SIGNING_SECRET` (for example `openssl rand -base64 32`). Rotating it logs everyone out.
-7. `npx wrangler secret put STRIPE_REFUND_KEY` with the restricted key described above. The same key reads Checkout Sessions for `/thanks`.
-8. `npx wrangler secret put STRIPE_WEBHOOK_SECRET` if the webhook should also grant access when the buyer never loads `/thanks`.
-9. `python3 ../scripts/build_prompt.py` and `npm run build:web` before deploy, so the prompt and `/chat` are in the bundle. `npm run dev` does both.
-10. `npx wrangler deploy` only when the site should actually go live.
+4. `npx wrangler d1 migrations apply old-counsel-events --remote` (0001 through 0004). This repo does not apply remote migrations.
+5. In Stripe, create the product and prices named in the pull request. Then `npx wrangler secret put STRIPE_PRICE_MONTHLY`, `STRIPE_PRICE_YEARLY`, and `STRIPE_PRICE_FOUNDING`. Leave the founding price unset to hide that offer.
+6. Configure the Customer Portal (cancel, switch monthly and yearly, update card). Then `npx wrangler secret put STRIPE_PORTAL_ENABLED` with the value `1`. Until that is set, "Cancel any time" stays hidden.
+7. `npx wrangler secret put OPENROUTER_API_KEY`
+8. `npx wrangler secret put ACCESS_SIGNING_SECRET` (for example `openssl rand -base64 32`). Rotating it logs everyone out.
+9. `npx wrangler secret put STRIPE_REFUND_KEY` with the restricted key described above. The same key creates Checkout Sessions, opens the billing portal, and reads Checkout Sessions for `/thanks`.
+10. `npx wrangler secret put STRIPE_WEBHOOK_SECRET`. Point the webhook at `https://oldcounsel.com/api/stripe/webhook` for `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid`, and `invoice.payment_failed`.
+11. `python3 ../scripts/build_prompt.py` and `npm run build:web` before deploy, so the prompt and `/chat` are in the bundle. `npm run dev` does both.
+12. `npx wrangler deploy` only when the site should actually go live.
 
 Optional vars, left unset so the code defaults apply: `DAILY_SPEND_LIMIT_USD` (50), `CHAT_RATE_ANON_PER_HOUR` (30), `CHAT_RATE_IP_PER_HOUR` (60).
 

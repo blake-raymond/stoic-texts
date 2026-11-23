@@ -1,23 +1,14 @@
-import { signingSecret } from "./access";
 import { handleAccess, handleChat } from "./chat";
-import { grantCheckoutEvent } from "./checkout";
+import { handleCheckout, handleOffer, handlePortal, handleStripeWebhook } from "./billing";
 import { OFFER } from "./config";
-import { insertEvent, purchaseEvent, sanitizePublicEvent } from "./events";
+import { insertEvent, sanitizePublicEvent } from "./events";
 import { boundFetch, json } from "./http";
 import { handleRefundConfirm, handleRefundRequest, refundsReady } from "./refund";
 import { handleRestoreConfirm, handleRestoreRequest } from "./restore";
-import { readCheckoutCompleted, verifyStripeSignature } from "./stripe";
 import { thanksDecision } from "./thanks";
 import systemPrompt from "../../prompt/out/system.txt";
 
 const MAX_BODY = 8192;
-
-function stripeSecret(env: Env): string | undefined {
-  const value = env.STRIPE_WEBHOOK_SECRET;
-  if (typeof value !== "string") return undefined;
-  const trimmed = value.trim();
-  return trimmed.length ? trimmed : undefined;
-}
 
 async function handleEvent(request: Request, env: Env): Promise<Response> {
   const declared = Number(request.headers.get("content-length") || "0");
@@ -73,60 +64,10 @@ async function handleCounts(env: Env): Promise<Response> {
   });
 }
 
-async function handleWebhook(request: Request, env: Env): Promise<Response> {
-  const secret = stripeSecret(env);
-  if (!secret) {
-    console.log(JSON.stringify({ message: "stripe webhook noop", reason: "STRIPE_WEBHOOK_SECRET unset" }));
-    return json({ ok: true, noop: true });
-  }
-  const declared = Number(request.headers.get("content-length") || "0");
-  if (Number.isFinite(declared) && declared > 1_000_000) return json({ ok: false }, 413);
-  const payload = await request.text();
-  const valid = await verifyStripeSignature(
-    payload,
-    request.headers.get("stripe-signature"),
-    secret,
-    Math.floor(Date.now() / 1000),
-  );
-  if (!valid) return json({ ok: false, error: "bad signature" }, 400);
-  const read = readCheckoutCompleted(payload);
-  if (!read.ok) {
-    if (read.ignore) return json({ ok: true, ignored: true });
-    return json({ ok: false, error: read.error ?? "bad event" }, 400);
-  }
-  const accessSecret = signingSecret(env);
-  if (accessSecret) {
-    const granted = await grantCheckoutEvent(env.DB, accessSecret, payload, Date.now());
-    if (granted === "error") return json({ ok: false }, 500);
-  }
-  const row = purchaseEvent({
-    now: Date.now(),
-    sessionId: read.event.sessionId,
-    clientReferenceId: read.event.clientReferenceId,
-    stripeEventId: read.event.eventId,
-  });
-  try {
-    await insertEvent(env.DB, row);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    if (message.includes("UNIQUE")) return json({ ok: true, duplicate: true });
-    console.error(JSON.stringify({ message: "purchase insert failed", error: message }));
-    return json({ ok: false }, 500);
-  }
-  console.log(JSON.stringify({
-    message: "event",
-    event: "purchase",
-    cta: row.cta,
-    variant: row.variant,
-    offer: OFFER,
-  }));
-  return json({ ok: true });
-}
-
 async function serveAsset(
   request: Request,
   env: Env,
-  options?: { thanksState?: "granted" | "unconfirmed"; cookies?: string[] },
+  options?: { thanksState?: "granted" | "unconfirmed"; thanksKind?: string; cookies?: string[] },
 ): Promise<Response> {
   let asset: Response;
   try {
@@ -143,7 +84,8 @@ async function serveAsset(
   const ready = refundsReady(env) ? "yes" : "no";
   const html = (await asset.text())
     .replaceAll("__REFUND_READY__", ready)
-    .replaceAll("__THANKS_STATE__", options?.thanksState ?? "unconfirmed");
+    .replaceAll("__THANKS_STATE__", options?.thanksState ?? "unconfirmed")
+    .replaceAll("__THANKS_KIND__", options?.thanksKind ?? "");
   const headers = new Headers(asset.headers);
   headers.delete("content-length");
   headers.set("content-type", "text/html; charset=utf-8");
@@ -166,7 +108,19 @@ export default {
     }
     if (path === "/api/stripe/webhook") {
       if (request.method !== "POST") return json({ ok: false }, 405);
-      return handleWebhook(request, env);
+      return handleStripeWebhook(request, env, boundFetch);
+    }
+    if (path === "/api/offer") {
+      if (request.method !== "GET") return json({ ok: false }, 405);
+      return handleOffer(env, Date.now());
+    }
+    if (path === "/api/checkout") {
+      if (request.method !== "POST") return json({ ok: false }, 405);
+      return handleCheckout(request, env, boundFetch, Date.now());
+    }
+    if (path === "/api/billing/portal") {
+      if (request.method !== "POST") return json({ ok: false }, 405);
+      return handlePortal(request, env, boundFetch, Date.now());
     }
     if (path === "/api/refund/request") {
       if (request.method !== "POST") return json({ ok: false }, 405);
@@ -195,9 +149,13 @@ export default {
     if (request.method !== "GET" && request.method !== "HEAD") return json({ ok: false }, 405);
     if (path === "/thanks") {
       const decision = request.method === "HEAD"
-        ? { state: "unconfirmed" as const, cookies: [] as string[] }
+        ? { state: "unconfirmed" as const, kind: "", cookies: [] as string[] }
         : await thanksDecision(request, env, boundFetch, Date.now());
-      return serveAsset(request, env, { thanksState: decision.state, cookies: decision.cookies });
+      return serveAsset(request, env, {
+        thanksState: decision.state,
+        thanksKind: decision.kind,
+        cookies: decision.cookies,
+      });
     }
     if (path === "/chat" || path === "/chat/") {
       const url = new URL(request.url);

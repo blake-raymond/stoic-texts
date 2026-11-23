@@ -17,6 +17,13 @@ import {
 } from "./refund-copy";
 import { findOldCounselCharges, normalizeEmail, refundCharges, stripeTransport } from "./refund-stripe";
 
+function foundingPriceId(env: Env): string | undefined {
+  const raw = env.STRIPE_PRICE_FOUNDING;
+  if (typeof raw !== "string") return undefined;
+  const trimmed = raw.trim();
+  return /^price_[A-Za-z0-9]+$/.test(trimmed) ? trimmed : undefined;
+}
+
 const MAX_BODY = 2048;
 const CODE_TTL_MS = 15 * 60 * 1000;
 const REQUEST_WINDOW_MS = 60 * 60 * 1000;
@@ -171,7 +178,7 @@ async function requestRefund(request: Request, env: Env): Promise<Response> {
 
   let result: "match" | "none" | "error" = "none";
   try {
-    const findings = await findOldCounselCharges(rawEmail, stripeTransport(boundFetch, key));
+    const findings = await findOldCounselCharges(rawEmail, stripeTransport(boundFetch, key), foundingPriceId(env));
     if (findings.length > 0) {
       result = "match";
       const code = generateCode();
@@ -249,7 +256,7 @@ async function confirmRefund(request: Request, env: Env): Promise<Response> {
   const matches = timingSafeEqual(submitted, stored) && Boolean(row);
   if (!matches) return json({ ok: false, message: BAD_CODE });
 
-  const findings = await findOldCounselCharges(rawEmail, stripeTransport(boundFetch, key));
+  const findings = await findOldCounselCharges(rawEmail, stripeTransport(boundFetch, key), foundingPriceId(env));
   const toRefund = findings.filter((finding) => finding.state === "refund").map((finding) => finding.id);
   const already = findings.filter((finding) => finding.state === "already").map((finding) => finding.id);
   if (toRefund.length === 0 && already.length === 0) {

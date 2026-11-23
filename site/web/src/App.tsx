@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   AssistantRuntimeProvider,
   ComposerPrimitive,
@@ -7,22 +7,30 @@ import {
   ThreadPrimitive,
   useLocalRuntime,
 } from "@assistant-ui/react";
-import { PAYMENT_LINK } from "../../src/public-config";
 import {
-  CHECKOUT,
+  CANCEL_ANY_TIME,
   CHECKOUT_NOTE,
+  CHECKOUT_UNAVAILABLE,
+  CONTINUE_FOUNDING,
+  CONTINUE_MONTHLY,
+  CONTINUE_YEARLY,
   EMPTY_SUB,
   EMPTY_TITLE,
+  FOUNDING_FULL,
+  FOUNDING_LEAD,
   FREE_IDLE,
+  MONTHLY_LABEL,
   NAME,
-  PAYWALL_TITLE,
+  NOT_NOW,
   PLACEHOLDER,
+  PLAN_NOTE,
   RESTORE_CODE,
   RESTORE_CONFIRM,
   RESTORE_EMAIL,
   RESTORE_HELP,
   RESTORE_SEND,
   SEND,
+  YEARLY_LABEL,
   YOU,
 } from "./copy";
 import { adapter, history, type AccessBlock } from "./runtime";
@@ -35,17 +43,58 @@ type AccessView = {
   code?: string | null;
   message?: string | null;
   restore?: "email" | "help";
+  portal?: boolean;
 };
 
-function checkoutHref(): string {
-  let variant = "a";
+type Offer = {
+  ok?: boolean;
+  portal?: boolean;
+  founding?: { remaining?: number } | null;
+};
+
+type PaidPlan = "yearly" | "monthly";
+
+function sheetDismissed(): boolean {
   try {
-    const stored = localStorage.getItem("oc_v");
-    if (stored === "b" || stored === "c") variant = stored;
+    return sessionStorage.getItem("oc_sheet_off") === "1";
   } catch {
-    // The default variant is fine.
+    return false;
   }
-  return `${PAYMENT_LINK}?client_reference_id=${encodeURIComponent(`chat_${variant}`)}`;
+}
+
+function trackCheckout(msOpen: number) {
+  const oc = (window as unknown as {
+    oldCounsel?: { track?: (name: string, props?: Record<string, unknown>) => void };
+  }).oldCounsel;
+  oc?.track?.("checkout_click", { cta: "chat", ms_open: Math.max(0, msOpen) });
+  try {
+    sessionStorage.setItem("oc_checkout", JSON.stringify({ cta: "chat" }));
+  } catch {
+    // The receipt page still loads.
+  }
+}
+
+async function startCheckout(plan: string, msOpen: number): Promise<string> {
+  trackCheckout(msOpen);
+  const response = await fetch("/api/checkout", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ plan }),
+  });
+  const body = await response.json() as { url?: unknown; code?: unknown };
+  if (typeof body.url === "string" && body.url) {
+    window.location.assign(body.url);
+    return "";
+  }
+  if (body.code === "founding_full") return FOUNDING_FULL;
+  return CHECKOUT_UNAVAILABLE;
+}
+
+async function startPortal(): Promise<void> {
+  const response = await fetch("/api/billing/portal", { method: "POST", credentials: "same-origin" });
+  const body = await response.json() as { url?: unknown };
+  if (typeof body.url === "string" && body.url) window.location.assign(body.url);
 }
 
 function statusLine(access: AccessView | null): string {
@@ -154,18 +203,98 @@ function RestoreForm() {
   );
 }
 
-function Dock({ access, block }: { access: AccessView | null; block: AccessBlock | null }) {
-  if (block?.code === "free_limit") {
+function Paywall({ access, message }: { access: AccessView | null; message: string }) {
+  const [offer, setOffer] = useState<Offer | null>(null);
+  const [plan, setPlan] = useState<PaidPlan>("yearly");
+  const [dismissed, setDismissed] = useState(sheetDismissed);
+  const [note, setNote] = useState("");
+  const [busy, setBusy] = useState(false);
+  const openedAt = useRef(Date.now());
+  useEffect(() => {
+    let gone = false;
+    fetch("/api/offer", { credentials: "same-origin", cache: "no-store" })
+      .then((response) => response.json())
+      .then((body: Offer) => {
+        if (!gone) setOffer(body);
+      })
+      .catch(() => {
+        // Plans stay. Spots and cancel stay hidden without a real answer.
+      });
+    return () => {
+      gone = true;
+    };
+  }, []);
+  if (dismissed) {
     return (
       <div className="chat-panel" role="status">
-        <h2>{PAYWALL_TITLE}</h2>
-        <p>{block.message}</p>
-        <a className="cta" href={checkoutHref()}>{CHECKOUT}</a>
-        <p className="under">{CHECKOUT_NOTE}</p>
-        <p>{RESTORE_HELP}</p>
-        {access?.restore === "email" ? <RestoreForm /> : null}
+        <p>{message}</p>
       </div>
     );
+  }
+  const remaining = offer?.founding?.remaining;
+  const go = (chosen: string) => {
+    setBusy(true);
+    setNote("");
+    startCheckout(chosen, Date.now() - openedAt.current)
+      .then((problem) => {
+        if (problem) setNote(problem);
+      })
+      .catch(() => setNote(CHECKOUT_UNAVAILABLE))
+      .finally(() => setBusy(false));
+  };
+  return (
+    <div className="chat-panel" role="status">
+      <p>{message}</p>
+      <fieldset className="plans">
+        <legend>Plan</legend>
+        <label>
+          <input type="radio" name="plan" value="yearly" checked={plan === "yearly"} onChange={() => setPlan("yearly")} />
+          {YEARLY_LABEL}
+        </label>
+        <label>
+          <input type="radio" name="plan" value="monthly" checked={plan === "monthly"} onChange={() => setPlan("monthly")} />
+          {MONTHLY_LABEL}
+        </label>
+      </fieldset>
+      <p className="under">{PLAN_NOTE}</p>
+      <button className="cta" type="button" disabled={busy} onClick={() => go(plan)}>
+        {plan === "monthly" ? CONTINUE_MONTHLY : CONTINUE_YEARLY}
+      </button>
+      {offer?.portal ? <p className="under">{CANCEL_ANY_TIME}</p> : null}
+      <p className="under">{CHECKOUT_NOTE}</p>
+      <button
+        className="text-button"
+        type="button"
+        onClick={() => {
+          try {
+            sessionStorage.setItem("oc_sheet_off", "1");
+          } catch {
+            // This visit still closes the sheet.
+          }
+          setDismissed(true);
+        }}
+      >
+        {NOT_NOW}
+      </button>
+      {typeof remaining === "number" ? (
+        <div className="founding-choice">
+          <p>{FOUNDING_LEAD}</p>
+          <p>{remaining === 1 ? "1 spot left" : `${remaining} spots left`}</p>
+          <button className="text-button" type="button" disabled={busy} onClick={() => go("founding")}>
+            {CONTINUE_FOUNDING}
+          </button>
+        </div>
+      ) : null}
+      {note ? <p>{note}</p> : null}
+      <p>{RESTORE_HELP}</p>
+      {access?.restore === "email" ? <RestoreForm /> : null}
+    </div>
+  );
+}
+
+function Dock({ access, block }: { access: AccessView | null; block: AccessBlock | null }) {
+  if ((block?.code === "free_limit" || block?.code === "inactive") && block.message) {
+    return <Paywall access={access} message={block.message} />;
   }
   if (block?.code === "monthly_cap") {
     return (
@@ -193,7 +322,7 @@ function Shell() {
       .then((body: AccessView) => {
         if (gone) return;
         setAccess(body);
-        if ((body.code === "free_limit" || body.code === "monthly_cap") && body.message) {
+        if ((body.code === "free_limit" || body.code === "monthly_cap" || body.code === "inactive") && body.message) {
           setBlock({ code: body.code, message: body.message });
         }
       })
@@ -202,7 +331,7 @@ function Shell() {
       });
     const onBlock = (event: Event) => {
       const detail = (event as CustomEvent<AccessBlock>).detail;
-      if (detail?.code !== "free_limit" && detail?.code !== "monthly_cap") return;
+      if (detail?.code !== "free_limit" && detail?.code !== "monthly_cap" && detail?.code !== "inactive") return;
       // The click that hit Send is still in flight. Wait so it does not land on the panel.
       window.setTimeout(() => setBlock(detail), 250);
     };
@@ -212,7 +341,7 @@ function Shell() {
         .then((body: AccessView) => {
           if (gone) return;
           setAccess(body);
-          if ((body.code === "free_limit" || body.code === "monthly_cap") && body.message) {
+          if ((body.code === "free_limit" || body.code === "monthly_cap" || body.code === "inactive") && body.message) {
             setBlock({ code: body.code, message: body.message });
           }
         })
@@ -237,6 +366,9 @@ function Shell() {
         <div className="wrap">
           <a className="mark" href="/">Old Counsel</a>
           {status ? <p className="chat-status">{status}</p> : null}
+          {access?.tier === "paid" && access.portal && !block ? (
+            <button className="text-button" type="button" onClick={() => { void startPortal(); }}>{CANCEL_ANY_TIME}</button>
+          ) : null}
         </div>
       </header>
       <ThreadPrimitive.Root className="chat-thread">

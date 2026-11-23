@@ -12,7 +12,6 @@ import { accessCookie } from "./cookies.ts";
 import { grantAccess, readPaidCheckout, retrievePaidSession } from "./checkout.ts";
 import { handleRestoreConfirm, handleRestoreRequest } from "./restore.ts";
 import { grantCheckoutEvent } from "./checkout.ts";
-import { PAYMENT_LINK_ID } from "./refund-stripe.ts";
 import { openTestDb } from "./testing/d1.ts";
 
 const SECRET = "test-access-secret-value";
@@ -78,21 +77,22 @@ function paidSession(overrides: Record<string, unknown> = {}) {
   return {
     id: "cs_test_buyer",
     object: "checkout.session",
-    payment_link: PAYMENT_LINK_ID,
+    mode: "payment",
     payment_status: "paid",
     status: "complete",
     currency: "usd",
-    amount_subtotal: 4900,
-    amount_total: 4900,
+    amount_subtotal: 24900,
+    amount_total: 24900,
     customer: "cus_test_buyer",
     customer_details: { email: "Buyer@Example.com" },
+    metadata: { offer: "founding_249", plan: "founding" },
     ...overrides,
   };
 }
 
 test("free conversation size is 8 replies, then the paywall, with no live calls", async () => {
   assert.equal(FREE_CONVERSATION_REPLIES, 8);
-  assert.equal(MONTHLY_REPLY_CAP, 200);
+  assert.equal(MONTHLY_REPLY_CAP, 100);
   const { db } = openTestDb();
   const calls: string[] = [];
   const fetchImpl: typeof fetch = async (input, init) => {
@@ -120,8 +120,9 @@ test("free conversation size is 8 replies, then the paywall, with no live calls"
   assert.equal(blocked.status, 402);
   const body = await blocked.json() as { code: string; message: string };
   assert.equal(body.code, "free_limit");
-  assert.match(body.message, /8 replies/);
-  assert.match(body.message, /\$49/);
+  assert.equal(body.message.includes("$49"), false);
+  assert.match(body.message, /Eight replies/);
+  assert.match(body.message, /free conversation/);
   assert.equal(calls.length, FREE_CONVERSATION_REPLIES);
 });
 
@@ -200,7 +201,7 @@ test("rate limits apply per anonymous id and per IP", async () => {
   assert.equal(otherIp.status, 429);
 });
 
-test("a mocked purchase unlocks chat, and the monthly cap refuses at 200", async () => {
+test("a mocked purchase unlocks chat, and the monthly cap refuses at 100", async () => {
   const { db } = openTestDb();
   const calls: string[] = [];
   const fetchImpl: typeof fetch = async (input) => {
@@ -234,7 +235,8 @@ test("a mocked purchase unlocks chat, and the monthly cap refuses at 200", async
   assert.equal(capped.status, 429);
   const body = await capped.json() as { code: string; message: string };
   assert.equal(body.code, "monthly_cap");
-  assert.match(body.message, /200 replies this month/);
+  assert.match(body.message, /100 replies this month/);
+  assert.match(body.message, /the 1st/);
   assert.match(body.message, /help@oldcounsel.com/);
 });
 
@@ -242,7 +244,8 @@ test("checkout rejects unpaid, underpriced, and other payment links", () => {
   assert.equal(readPaidCheckout(paidSession()).ok, true);
   assert.equal(readPaidCheckout(paidSession({ payment_status: "unpaid" })).ok, false);
   assert.equal(readPaidCheckout(paidSession({ amount_subtotal: 100, amount_total: 100 })).ok, false);
-  assert.equal(readPaidCheckout(paidSession({ payment_link: "plink_other" })).ok, false);
+  assert.equal(readPaidCheckout(paidSession({ amount_subtotal: 4900, amount_total: 4900 })).ok, false);
+  assert.equal(readPaidCheckout(paidSession({ metadata: { offer: "lifetime_49", plan: "founding" } })).ok, false);
   assert.equal(readPaidCheckout(paidSession({ customer_details: { email: "" }, customer_email: null })).ok, false);
 });
 
@@ -258,7 +261,7 @@ test("the webhook grants access from the event and does not call Stripe", async 
   const skipped = await grantCheckoutEvent(db, SECRET, JSON.stringify({
     id: "evt_other",
     type: "checkout.session.completed",
-    data: { object: paidSession({ id: "cs_test_other", payment_link: "plink_other" }) },
+    data: { object: paidSession({ id: "cs_test_other", metadata: { offer: "lifetime_49" }, amount_total: 4900, amount_subtotal: 4900 }) },
   }), NOW);
   assert.equal(skipped, "skipped");
   const rows = await db.prepare("SELECT COUNT(*) AS n FROM access_grants").first<{ n: number }>();
@@ -282,6 +285,8 @@ test("a mocked code restores access on a new cookie", async () => {
     sessionId: "cs_test_restore",
     email: "buyer@example.com",
     customerId: "cus_test_buyer",
+    kind: "founding",
+    subscriptionId: null,
   }, NOW);
   const sent: string[] = [];
   const withMail = env(db);
