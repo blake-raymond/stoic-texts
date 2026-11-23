@@ -1,4 +1,4 @@
-// Stripe lookups and refunds for Old Counsel pre-orders only.
+// Stripe lookups and refunds for Old Counsel purchases only.
 // The account is shared with say.as. A charge qualifies only when a Checkout
 // Session for PAYMENT_LINK_ID used this email, or the PaymentIntent metadata
 // is the Old Counsel experiment and offer. Everything else is left alone.

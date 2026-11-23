@@ -14,7 +14,7 @@ export const PUBLIC_EVENTS = [
 ] as const;
 
 const CTA_EVENTS = new Set(["cta_click", "door_view", "door_close", "checkout_click"]);
-const CTAS = new Set(["hero", "example", "offer", "close"]);
+const CTAS = new Set(["hero", "example", "offer", "close", "chat"]);
 const VARIANTS = new Set(["a", "b", "c"]);
 const DEPTHS = new Set([25, 50, 75, 100]);
 const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;

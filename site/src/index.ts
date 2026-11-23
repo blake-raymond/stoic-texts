@@ -1,19 +1,16 @@
-import { LAUNCH_DATE, OFFER } from "./config";
+import { signingSecret } from "./access";
+import { handleAccess, handleChat } from "./chat";
+import { grantCheckoutEvent } from "./checkout";
+import { OFFER } from "./config";
 import { insertEvent, purchaseEvent, sanitizePublicEvent } from "./events";
+import { boundFetch, json } from "./http";
 import { handleRefundConfirm, handleRefundRequest, refundsReady } from "./refund";
+import { handleRestoreConfirm, handleRestoreRequest } from "./restore";
 import { readCheckoutCompleted, verifyStripeSignature } from "./stripe";
+import { thanksDecision } from "./thanks";
+import systemPrompt from "../../prompt/out/system.txt";
 
 const MAX_BODY = 8192;
-
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store",
-    },
-  });
-}
 
 function stripeSecret(env: Env): string | undefined {
   const value = env.STRIPE_WEBHOOK_SECRET;
@@ -97,6 +94,11 @@ async function handleWebhook(request: Request, env: Env): Promise<Response> {
     if (read.ignore) return json({ ok: true, ignored: true });
     return json({ ok: false, error: read.error ?? "bad event" }, 400);
   }
+  const accessSecret = signingSecret(env);
+  if (accessSecret) {
+    const granted = await grantCheckoutEvent(env.DB, accessSecret, payload, Date.now());
+    if (granted === "error") return json({ ok: false }, 500);
+  }
   const row = purchaseEvent({
     now: Date.now(),
     sessionId: read.event.sessionId,
@@ -121,7 +123,11 @@ async function handleWebhook(request: Request, env: Env): Promise<Response> {
   return json({ ok: true });
 }
 
-async function serveAsset(request: Request, env: Env): Promise<Response> {
+async function serveAsset(
+  request: Request,
+  env: Env,
+  options?: { thanksState?: "granted" | "unconfirmed"; cookies?: string[] },
+): Promise<Response> {
   let asset: Response;
   try {
     asset = await env.ASSETS.fetch(request);
@@ -136,12 +142,13 @@ async function serveAsset(request: Request, env: Env): Promise<Response> {
   if (!asset.ok || !type.includes("text/html")) return asset;
   const ready = refundsReady(env) ? "yes" : "no";
   const html = (await asset.text())
-    .replaceAll("__LAUNCH_DATE__", LAUNCH_DATE)
-    .replaceAll("__REFUND_READY__", ready);
+    .replaceAll("__REFUND_READY__", ready)
+    .replaceAll("__THANKS_STATE__", options?.thanksState ?? "unconfirmed");
   const headers = new Headers(asset.headers);
   headers.delete("content-length");
   headers.set("content-type", "text/html; charset=utf-8");
   headers.set("cache-control", "no-store");
+  for (const cookie of options?.cookies ?? []) headers.append("set-cookie", cookie);
   return new Response(html, { status: asset.status, headers });
 }
 
@@ -169,7 +176,34 @@ export default {
       if (request.method !== "POST") return json({ ok: false }, 405);
       return handleRefundConfirm(request, env);
     }
+    if (path === "/api/chat") {
+      if (request.method !== "POST") return json({ ok: false }, 405);
+      return handleChat(request, env, { fetchImpl: boundFetch, now: () => Date.now(), systemPrompt });
+    }
+    if (path === "/api/access") {
+      if (request.method !== "GET") return json({ ok: false }, 405);
+      return handleAccess(request, env, Date.now());
+    }
+    if (path === "/api/access/restore") {
+      if (request.method !== "POST") return json({ ok: false }, 405);
+      return handleRestoreRequest(request, env, Date.now());
+    }
+    if (path === "/api/access/confirm") {
+      if (request.method !== "POST") return json({ ok: false }, 405);
+      return handleRestoreConfirm(request, env, Date.now());
+    }
     if (request.method !== "GET" && request.method !== "HEAD") return json({ ok: false }, 405);
+    if (path === "/thanks") {
+      const decision = request.method === "HEAD"
+        ? { state: "unconfirmed" as const, cookies: [] as string[] }
+        : await thanksDecision(request, env, boundFetch, Date.now());
+      return serveAsset(request, env, { thanksState: decision.state, cookies: decision.cookies });
+    }
+    if (path === "/chat" || path === "/chat/") {
+      const url = new URL(request.url);
+      url.pathname = "/chat/index.html";
+      return serveAsset(new Request(url.toString(), { method: request.method, headers: request.headers }), env);
+    }
     return serveAsset(request, env);
   },
 } satisfies ExportedHandler<Env>;

@@ -19,7 +19,7 @@ Old Counsel is a conversation built on this corpus. The repository holds the tex
 
 That join is the one the runner used: the persona file, then a blank line, then the header, then set F, then a blank line, then the reminder.
 
-Set F is the source text the model sees. Measured from the files in this repository, it is 992,644 characters and 225,271 tokens in the tiktoken encoding `o200k_base`. The assembled system prompt is 997,660 characters and 226,360 tokens in that same encoding. `prompt/meta.json` records both figures. The model is `google/gemini-3.6-flash`, called through OpenRouter, at temperature 0.7. API keys stay out of the repository.
+Set F is the source text the model sees. Measured from the files in this repository, it is 992,644 characters and 225,271 tokens in the tiktoken encoding `o200k_base`. The assembled system prompt is 997,660 characters and 226,360 tokens in that same encoding. `prompt/meta.json` records both figures and the eval model, `google/gemini-3.6-flash`. The live chat model is a separate constant, `CHAT_MODEL` in `site/src/config.ts`: `anthropic/claude-sonnet-5.5` through OpenRouter, temperature 0.7. API keys stay out of the repository.
 
 Set F contains only these works, in this order:
 
@@ -42,7 +42,7 @@ python scripts/build_prompt.py
 python scripts/build_prompt.py --check
 ```
 
-The pre-order page lives in `site/`. Deploying it is a separate step, described in `site/README.md`, and is not part of regenerating the corpus.
+The site lives in `site/`. Deploying it is a separate step, described in `site/README.md`, and is not part of regenerating the corpus.
 
 ## Scope
 
@@ -232,5 +232,5 @@ scripts/build_prompt.py      assemble the Old Counsel system prompt
 scripts/count_tokens.py      recompute counts
 scripts/tag_passages.py      recompute the heuristic tags
 tests/test_corpus.py
-site/                        oldcounsel.com pre-order page (see site/README.md)
+site/                        oldcounsel.com (see site/README.md)
 ```

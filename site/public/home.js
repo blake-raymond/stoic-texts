@@ -98,7 +98,14 @@
     oc.track("door_close", { cta: lastCta, ms_open: Date.now() - opened });
   }
   document.querySelectorAll("[data-cta]").forEach(function (button) {
-    button.addEventListener("click", function () { openDoor(button.getAttribute("data-cta")); });
+    button.addEventListener("click", function () {
+      var id = button.getAttribute("data-cta");
+      if (button.tagName === "A") {
+        oc.track("cta_click", { cta: id });
+        return;
+      }
+      openDoor(id);
+    });
   });
   document.getElementById("door-x").addEventListener("click", closeDoor);
   door.addEventListener("click", function (event) { if (event.target === door) closeDoor(); });

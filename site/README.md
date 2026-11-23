@@ -1,41 +1,49 @@
-# Old Counsel pre-order site
+# Old Counsel site
 
-The page for oldcounsel.com. It is a Cloudflare Worker with static assets and a D1 database for first-party events. Nothing here is deployed. The payment link is the live Stripe link already created for this offer. The refund route calls the Stripe API when `STRIPE_REFUND_KEY` is set. This folder holds no key values.
+The site for oldcounsel.com. It is a Cloudflare Worker with static assets, a chat page, and a D1 database. Nothing here is deployed from this repository. The payment link is the live Stripe link already created for this offer. The refund route and the `/thanks` access grant call the Stripe API when `STRIPE_REFUND_KEY` is set. This folder holds no key values.
 
 ## Run it locally
 
 ```bash
 cd site
 npm install
-npx wrangler d1 migrations apply old-counsel-events --local
-npx wrangler dev
+npm run migrate:local
+npm run dev
 ```
 
-The dev server listens on http://127.0.0.1:8787. `/` is the page. `/thanks?session_id=cs_test_123` is the page Stripe redirects to after payment.
+`npm run dev` rebuilds the system prompt, builds the chat page, and starts Wrangler. The dev server listens on http://127.0.0.1:8787. `/` is the landing page. `/chat` is the conversation. `/thanks?session_id=cs_test_123` is the page Stripe redirects to after payment.
 
-`database_id` in `wrangler.jsonc` is a placeholder. Local D1 does not need a real Cloudflare database.
+`database_id` in `wrangler.jsonc` is the existing empty D1 database `old-counsel-events` (`92147965-54f1-4d4d-b8a3-3cb75e65d9e3`). Do not create a second database. Local D1 is separate from that remote database. Remote migrations are a manual step, described under Deploy.
 
-## Launch date
-
-The opening year is one string, `LAUNCH_DATE` in `src/config.ts`. It is `2027`. The Worker replaces `__LAUNCH_DATE__` in the HTML, including the sheet, the FAQ, and the FAQ JSON-LD. The sentences are written for a year: "opens in 2027" and "by the end of 2027". The sentence beside the pay button on the Stripe payment link is separate and is not changed from this repo.
+Chat needs `OPENROUTER_API_KEY` and `ACCESS_SIGNING_SECRET` (at least 16 characters) in `site/.dev.vars`. See `.dev.vars.example`. Point `OPENROUTER_API_BASE` and `STRIPE_API_BASE` at a local mock when you do not want live calls.
 
 ## What the page does
 
-The copy follows the page spec. The example is a real reply from `google/gemini-3.6-flash` on source set F. The question and the reply are unedited. The reply is long, so the first paragraph shows and the rest opens with "Read the full reply". No words are removed.
+The example is a real reply from the eval on source set F. The question and the reply are unedited. The reply is long, so the first paragraph shows and the rest opens with "Read the full reply". No words are removed. `prompt/meta.json` still records that eval (`google/gemini-3.6-flash`, o200k tokens). The live chat model is `CHAT_MODEL` in `src/config.ts`.
 
-Hero hooks: the default page, `?v=b`, and `?v=c`. The choice sticks in `localStorage` under `oc_v`. The spec also describes a `?v=` hook for an unbuilt continuity feature. It is not on the page. The page would otherwise claim something the product does not do.
+Hero hooks: the default page, `?v=b`, and `?v=c`. The choice sticks in `localStorage` under `oc_v`.
 
-Every pre-order button opens the sheet, then goes to:
+"Start a conversation" goes to `/chat`. "Get lifetime access" opens the sheet, then goes to:
 
 ```
 https://buy.stripe.com/5kQ6oJakdaKugGS2SNfw404?client_reference_id=<button>_<variant>
 ```
 
-`<button>` is `hero`, `example`, `offer`, or `close`. `<variant>` is `a`, `b`, or `c`. Stripe Checkout records that value on the session.
+`<button>` is `offer` for the sheet. The chat paywall uses `chat`. `<variant>` is `a`, `b`, or `c`. Stripe Checkout records that value on the session.
+
+## Chat
+
+`/chat` is a Vite build of assistant-ui, written to `site/public/chat/` (gitignored) and served by the Worker. The conversation is kept in `localStorage`. The server counts replies and does not store the text.
+
+`FREE_CONVERSATION_REPLIES` in `src/config.ts` is 8: one sitting on one trouble. After that, the server returns `free_limit` and the page offers the $49 payment link. A paid buyer is capped at `MONTHLY_REPLY_CAP` (200) replies per UTC month. Both caps are enforced in D1.
+
+The model, temperature, and OpenRouter provider pin are `CHAT_MODEL`, `CHAT_TEMPERATURE`, and `OPENROUTER_PROVIDER` in that same file. The system prompt is the byte-identical prefix from `scripts/build_prompt.py`, with `cache_control: { type: "ephemeral" }` on the system block. A cold cache re-bills the whole prompt. The daily spend guard defaults to $50 (`DAILY_SPEND_LIMIT_USD` overrides it) and holds $0.90 per reply until OpenRouter reports the real cost.
+
+Returning on another device: if the email binding can send and `ACCESS_SIGNING_SECRET` is set, `/api/access/restore` emails a 6-digit code. Otherwise the page says to email help@oldcounsel.com. Cloudflare Email Sending is not available on the Workers free plan, so a production deploy on that plan uses the help@ sentence.
 
 ## Events
 
-`POST /api/event` stores one event. There are no third-party trackers and no cookies. The variant stickiness uses `localStorage`. UTM parameters seen on a visit are kept in `sessionStorage` so the thanks page can still send them after Stripe redirects back in the same tab.
+`POST /api/event` stores one event. There are no third-party trackers. The variant stickiness uses `localStorage`. Access uses two first-party httpOnly cookies, `oc_anon` and `oc_access`. UTM parameters seen on a visit are kept in `sessionStorage` so the thanks page can still send them after Stripe redirects back in the same tab. `/chat` also sends `page_view`.
 
 | Event | When |
 | --- | --- |
@@ -44,7 +52,7 @@ https://buy.stripe.com/5kQ6oJakdaKugGS2SNfw404?client_reference_id=<button>_<var
 | `example_view` | half the example is on screen |
 | `faq_open` | a question is opened |
 | `link_click` | a repo or X link is clicked |
-| `cta_click` | any pre-order button |
+| `cta_click` | a landing button, including one that goes to `/chat` |
 | `door_view` | the sheet opens |
 | `checkout_click` | the pay button in the sheet |
 | `door_close` | the sheet is dismissed |
@@ -54,7 +62,7 @@ https://buy.stripe.com/5kQ6oJakdaKugGS2SNfw404?client_reference_id=<button>_<var
 | `refund_code_sent` | a code was emailed for an Old Counsel charge |
 | `refund_done` | a code was accepted and the refund call finished |
 
-`refund_request`, `refund_code_sent`, and `refund_done` are written by the Worker. `POST /api/event` does not accept them. The stored props do not include the email address. `refund_request` records `match`, `none`, or `error` so a missing code is visible in D1 without the page saying which emails have a pre-order.
+`refund_request`, `refund_code_sent`, and `refund_done` are written by the Worker. `POST /api/event` does not accept them. The stored props do not include the email address. `refund_request` records `match`, `none`, or `error` so a missing code is visible in D1 without the page saying which emails have a purchase.
 
 `purchase_return` is the browser landing on `/thanks`. `purchase` is the webhook, which is the reliable count of paid checkouts. A refresh of `/thanks` does not send `purchase_return` again in that tab.
 
@@ -97,13 +105,13 @@ Point the Stripe endpoint at `https://oldcounsel.com/api/stripe/webhook` and sub
 
 ## Refunds
 
-`/refund` refunds a buyer who asks. It does not refund anyone on a date by itself. The "end of 2027" refund in the FAQ is a separate promise.
+`/refund` refunds a buyer who asks. The landing page no longer promises an automatic refund. The refund tool still refunds this payment link.
 
 The link "Get a refund" is on `/thanks` and in the FAQ. Both go to `/refund`.
 
 1. The buyer enters the purchase email.
 2. If that email has an Old Counsel charge, the Worker emails a 6-digit code from `noreply@oldcounsel.com`. The code expires in 15 minutes. Requests are limited to 5 an hour per email and 20 an hour per IP. Code attempts are limited to 8 per 15 minutes per email and 30 per 15 minutes per IP.
-3. The page always answers "If that email has a pre-order, a code is on its way. It expires in 15 minutes." A missing purchase gets the same sentence.
+3. The page always answers "If that email has a purchase, a code is on its way. It expires in 15 minutes." A missing purchase gets the same sentence.
 4. The buyer enters the code. The Worker refunds that email's unrefunded Old Counsel charges in full.
 5. The page says "Your refund is on its way. It takes 5 to 10 business days to appear."
 
@@ -152,13 +160,18 @@ Do this only when the site should actually go live. oldcounsel.com is already on
 
 1. `cd site && npm install`
 2. `npx wrangler login` with the account that holds oldcounsel.com
-3. `npx wrangler d1 create old-counsel-events`
-4. Replace the placeholder `database_id` in `wrangler.jsonc` with the id that command prints.
-5. `npx wrangler d1 migrations apply old-counsel-events --remote`
-6. `npx wrangler secret put STRIPE_WEBHOOK_SECRET`
-7. `npx wrangler secret put STRIPE_REFUND_KEY` with the restricted key described above
-8. `npx wrangler email sending enable oldcounsel.com`, then add the SPF and DKIM records it prints
-9. `npx wrangler deploy`
+3. The D1 database already exists. `database_id` is already `92147965-54f1-4d4d-b8a3-3cb75e65d9e3`. Do not create another one.
+4. `npx wrangler d1 migrations apply old-counsel-events --remote` (0001, 0002, and 0003). This repo does not apply remote migrations.
+5. `npx wrangler secret put OPENROUTER_API_KEY`
+6. `npx wrangler secret put ACCESS_SIGNING_SECRET` (for example `openssl rand -base64 32`). Rotating it logs everyone out.
+7. `npx wrangler secret put STRIPE_REFUND_KEY` with the restricted key described above. The same key reads Checkout Sessions for `/thanks`.
+8. `npx wrangler secret put STRIPE_WEBHOOK_SECRET` if the webhook should also grant access when the buyer never loads `/thanks`.
+9. `python3 ../scripts/build_prompt.py` and `npm run build:web` before deploy, so the prompt and `/chat` are in the bundle. `npm run dev` does both.
+10. `npx wrangler deploy` only when the site should actually go live.
+
+Optional vars, left unset so the code defaults apply: `DAILY_SPEND_LIMIT_USD` (50), `CHAT_RATE_ANON_PER_HOUR` (30), `CHAT_RATE_IP_PER_HOUR` (60).
+
+If deploy rejects the `send_email` binding on the free plan, remove that block. Refunds and restore then show the help@oldcounsel.com sentence. Do not set `"remote": true` on the binding.
 
 The route already in the config is:
 
@@ -170,6 +183,6 @@ The route already in the config is:
 
 Optional: set `"account_id"` in `wrangler.jsonc` to the account Wrangler should use. Leave it out to use the account from `wrangler login`.
 
-`npm run types` regenerates `worker-configuration.d.ts` after a binding change. `npm run check` typechecks the Worker.
+`npm run types` regenerates `worker-configuration.d.ts` after a binding change. `npm run check` typechecks the Worker and the chat page.
 
 Logs and traces are enabled at a sampling rate of 1, which fits a page with well under a thousand visits a week. Lower `observability.traces.head_sampling_rate` if that volume grows.

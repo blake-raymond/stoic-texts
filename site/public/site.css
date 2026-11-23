@@ -61,7 +61,22 @@ footer a{color:var(--muted)}
 .terms{list-style:none;padding:0;margin:0 0 1.25rem}
 .terms li{padding:.45rem 0;border-bottom:1px solid var(--rule)}
 .terms li:last-child{border-bottom:0}
-.thanks a{color:var(--accent)}
+.thanks a:not(.cta){color:var(--accent)}
+.chat-page{height:100dvh;min-height:100dvh;display:flex;flex-direction:column}
+.chat-page #root{flex:1;min-height:0;display:flex;flex-direction:column}
+.chat-thread{flex:1;min-height:0;display:flex;flex-direction:column}
+.chat-page header.top{padding:1.1rem 0 .4rem}
+.chat-status{color:var(--muted);font-size:.95rem;font-style:italic;margin:0 0 .4rem}
+.chat-log{flex:1;overflow-y:auto;padding:1.25rem 0 1rem}
+.chat-log .msg p:last-child{margin-bottom:0}
+.chat-empty{padding:1.5rem 0 0}
+.chat-dock{position:sticky;bottom:0;background:var(--paper);border-top:1px solid var(--rule);padding:.9rem 0 calc(.9rem + env(safe-area-inset-bottom))}
+.chat-dock textarea.field{min-height:5.5rem;resize:vertical;margin-bottom:.7rem}
+.chat-panel{background:var(--paper-2);border-radius:18px;padding:1.25rem 1.15rem 1.35rem;margin:0}
+.chat-panel p{color:var(--ink-2)}
+.chat-panel .cta{margin-top:.4rem}
+.chat-error{color:var(--accent);font-style:italic}
+.restore-form{margin-top:.4rem}
 @media (min-width:760px){
   :root{--measure:40rem}
   .hero{padding:6rem 0 4.5rem}
@@ -70,4 +85,5 @@ footer a{color:var(--muted)}
   .points{grid-template-columns:1fr 1fr;gap:2rem 2.5rem}
   .door{align-items:center;padding:1.5rem}
   .sheet{border-radius:22px;max-height:calc(100dvh - 3rem)}
+  .chat-dock .cta{min-width:8rem}
 }

@@ -1,0 +1,15 @@
+export const EMPTY_TITLE = "Tell it what's wrong.";
+export const EMPTY_SUB = "It answers in plain words. No quotes.";
+export const PLACEHOLDER = "What's weighing on you?";
+export const SEND = "Send";
+export const YOU = "You";
+export const NAME = "Old Counsel";
+export const FREE_IDLE = "The first conversation is free.";
+export const PAYWALL_TITLE = "Lifetime access";
+export const CHECKOUT = "Get lifetime access";
+export const CHECKOUT_NOTE = "Secure checkout by Stripe.";
+export const RESTORE_HELP = "On another device, email help@oldcounsel.com from the address you paid with.";
+export const RESTORE_EMAIL = "Email from your purchase";
+export const RESTORE_SEND = "Send a code";
+export const RESTORE_CODE = "Code";
+export const RESTORE_CONFIRM = "Restore access";

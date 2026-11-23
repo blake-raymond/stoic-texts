@@ -1,4 +1,10 @@
 (function () {
+  var state = document.body.getAttribute("data-thanks");
+  var granted = document.getElementById("granted");
+  var unconfirmed = document.getElementById("unconfirmed");
+  if (state === "granted" && granted) granted.hidden = false;
+  else if (unconfirmed) unconfirmed.hidden = false;
+
   var params = new URLSearchParams(location.search);
   var sessionId = params.get("session_id") || "";
   var key = "oc_purchase_return:" + sessionId;

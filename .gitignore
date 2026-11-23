@@ -6,3 +6,4 @@ prompt/out/
 site/node_modules/
 site/.wrangler/
 site/.dev.vars
+site/public/chat/

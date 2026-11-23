@@ -46,22 +46,37 @@ def test_example_reply_is_verbatim():
     assert "illustrative" not in html.lower()
 
 
-def test_launch_date_has_one_source():
-    config = (SITE / "src" / "config.ts").read_text(encoding="utf-8")
-    assert 'export const LAUNCH_DATE = "2027"' in config
+def test_live_product_copy():
     index = (SITE / "public" / "index.html").read_text(encoding="utf-8")
     thanks = (SITE / "public" / "thanks.html").read_text(encoding="utf-8")
+    config = (SITE / "src" / "config.ts").read_text(encoding="utf-8")
+    public = (SITE / "src" / "public-config.ts").read_text(encoding="utf-8")
+    link = "https://buy.stripe.com/5kQ6oJakdaKugGS2SNfw404"
+    assert link in public
+    assert "LAUNCH_DATE" not in config
     for html in (index, thanks):
-        assert "__LAUNCH_DATE__" in html
-        assert "[LAUNCH DATE]" not in html
         assert "2027" not in html
-    assert "Old Counsel opens in __LAUNCH_DATE__." in index
-    assert "Not open by the end of __LAUNCH_DATE__? Full refund, automatically." in index
-    assert index.count("if it hasn't opened by the end of __LAUNCH_DATE__.") == 2
-    assert "when it opens in __LAUNCH_DATE__." in thanks
+        assert "__LAUNCH_DATE__" not in html
+        assert "pre-order" not in html.lower()
+        assert "not open yet" not in html.lower()
+    assert index.count('href="/chat"') == 3
+    assert "Get lifetime access" in index
+    assert "Continue to checkout" in index
+    assert "Talk now. Pay only if you want to keep going." in index
+    assert "How do I come back on another device?" in index
+    assert "What if I want a refund?" in index
+    assert "What if it never opens?" not in index
+    assert "$49, once. Then up to 200 replies a month, for as long as Old Counsel runs." in index
+    assert "Your first conversation is free." in index
+    assert "One payment. No subscription." in index
+    assert "Lifetime access is yours. You can talk now." in thanks
+    assert "We could not confirm that payment." in thanks
+    assert "If you were charged, email" in thanks
+    assert "__THANKS_STATE__" in thanks
     wrangler = (SITE / "wrangler.jsonc").read_text(encoding="utf-8")
     assert '"pattern": "oldcounsel.com"' in wrangler
     assert '"custom_domain": true' in wrangler
+    assert "92147965-54f1-4d4d-b8a3-3cb75e65d9e3" in wrangler
 
 
 def test_payment_link_and_reference_id():
@@ -83,7 +98,20 @@ def test_banned_words_are_absent_from_site_copy():
         (SITE / "public" / name).read_text(encoding="utf-8")
         for name in ("home.js", "thanks.js", "track.js")
     )
-    visible = "\n".join([visible_text(index), visible_text(thanks), visible_text(refund), scripts, refund_js])
+    chat_html = (SITE / "web" / "index.html").read_text(encoding="utf-8")
+    chat_src = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (SITE / "web" / "src").glob("*.ts*")
+    )
+    visible = "\n".join([
+        visible_text(index),
+        visible_text(thanks),
+        visible_text(refund),
+        visible_text(chat_html),
+        scripts,
+        refund_js,
+        chat_src,
+    ])
     lowered = visible.lower()
     assert not re.search(r"\bphone\b", lowered)
     assert "free to try" not in lowered
@@ -91,7 +119,7 @@ def test_banned_words_are_absent_from_site_copy():
     assert not re.search(r"\bmemory\b", lowered)
     assert not re.search(r"\bremember\w*\b", lowered)
     assert not re.search(r"(?<![&\w])#[A-Za-z]", visible)
-    bodies = body(index) + body(thanks) + body(refund) + scripts + refund_js
+    bodies = body(index) + body(thanks) + body(refund) + body(chat_html) + scripts + refund_js + chat_src
     verbatim = re.search(r'data-verbatim="reply">.*?</div>\s*<button', index, re.S)
     assert verbatim
     bodies = bodies.replace(verbatim.group(0), "")
@@ -109,14 +137,17 @@ def test_refund_links_and_copy():
     wrangler = (SITE / "wrangler.jsonc").read_text(encoding="utf-8")
     assert index.count('href="/refund"') == 1
     assert thanks.count('href="/refund"') == 1
-    assert 'href="/refund">get a refund</a> any time' in index
+    assert 'href="/refund">get a refund</a>' in index
     assert ">Get a refund</a>" in thanks
-    assert "Before then, get a refund any time, or email help@oldcounsel.com." in index
     assert "https://oldcounsel.com/refund" not in index
-    assert "Enter the email from your pre-order." in refund
+    assert "Enter the email from your purchase." in refund
     assert "Email <a href=\"mailto:help@oldcounsel.com\">help@oldcounsel.com</a> and you'll be refunded in full." in refund
     assert "5 to 10 business days" in copy
-    assert "If that email has a pre-order, a code is on its way." in copy
+    assert "If that email has a purchase, a code is on its way." in copy
+    assert "pre-order" not in copy.lower()
+    chat_copy = (SITE / "src" / "chat-copy.ts").read_text(encoding="utf-8")
+    assert "\u2014" not in chat_copy
+    assert "help@oldcounsel.com" in chat_copy
     assert "noreply@oldcounsel.com" in copy
     assert "plink_1UejbsRssDxlNdX37XKaLinq" in stripe
     assert "oldcounsel-fakedoor-nov2026" in stripe
