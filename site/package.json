@@ -1,0 +1,17 @@
+{
+  "name": "old-counsel-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "types": "wrangler types --include-runtime false",
+    "check": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test src/refund-stripe.test.ts",
+    "migrate:local": "wrangler d1 migrations apply old-counsel-events --local"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261122.2",
+    "typescript": "^5.7.2",
+    "wrangler": "^4.50.0"
+  }
+}

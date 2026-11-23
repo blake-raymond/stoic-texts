@@ -2,3 +2,7 @@ __pycache__/
 .pytest_cache/
 *.pyc
 sources/
+prompt/out/
+site/node_modules/
+site/.wrangler/
+site/.dev.vars

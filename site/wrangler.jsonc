@@ -1,0 +1,42 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "old-counsel",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "upload_source_maps": true,
+  // Logs and traces for the pre-order site. Traffic is small, so both are sampled at 1.
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 1 }
+  },
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // The Worker rewrites __LAUNCH_DATE__ in HTML, and it owns /api and /thanks.
+    "run_worker_first": true
+  },
+  // oldcounsel.com is on this Cloudflare account. Deploy attaches the Worker to that hostname.
+  "routes": [
+    { "pattern": "oldcounsel.com", "custom_domain": true }
+  ],
+  // Refund codes are mailed from noreply@oldcounsel.com.
+  // Onboard the domain before a real send: `npx wrangler email sending enable oldcounsel.com`
+  // Local wrangler dev simulates this binding and does not send mail. Leave remote unset.
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "allowed_sender_addresses": ["noreply@oldcounsel.com"]
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "old-counsel-events",
+      // Placeholder. Replace with the id from `npx wrangler d1 create old-counsel-events` before any deploy.
+      "database_id": "00000000-0000-4000-8000-000000000001",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

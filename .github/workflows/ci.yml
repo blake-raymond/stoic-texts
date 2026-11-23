@@ -18,5 +18,13 @@ jobs:
         run: python scripts/count_tokens.py --check
       - name: Function tags match the heuristic
         run: python scripts/tag_passages.py --check
+      - name: Old Counsel prompt matches the texts
+        run: python scripts/build_prompt.py --check
       - name: Corpus tests
         run: pytest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Refund tests
+        working-directory: site
+        run: node --experimental-strip-types --test src/refund-stripe.test.ts
