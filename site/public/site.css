@@ -80,7 +80,7 @@ footer a{color:var(--muted)}
 .plans legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .plans label{display:flex;gap:.65rem;align-items:baseline;padding:.55rem 0;border-bottom:1px solid var(--rule);cursor:pointer;color:var(--ink)}
 .plans input{accent-color:var(--accent)}
-.founding-choice{margin-top:1.1rem}
+.founding-choice{margin-top:1.15rem;padding-top:1.05rem;border-top:1px solid var(--rule)}
 .founding-choice p{color:var(--ink-2)}
 .text-button{background:none;border:0;padding:.35rem 0;font:inherit;font-style:italic;color:var(--muted);cursor:pointer}
 .chat-panel .text-button{display:block}

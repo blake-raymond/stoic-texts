@@ -262,6 +262,18 @@ function Paywall({ access, message }: { access: AccessView | null; message: stri
       </button>
       {offer?.portal ? <p className="under">{CANCEL_ANY_TIME}</p> : null}
       <p className="under">{CHECKOUT_NOTE}</p>
+      {typeof remaining === "number" ? (
+        <div className="founding-choice">
+          <p>{FOUNDING_LEAD}</p>
+          <p>{remaining === 1 ? "1 spot left" : `${remaining} spots left`}</p>
+          <button className="text-button" type="button" disabled={busy} onClick={() => go("founding")}>
+            {CONTINUE_FOUNDING}
+          </button>
+        </div>
+      ) : null}
+      {note ? <p>{note}</p> : null}
+      <p>{RESTORE_HELP}</p>
+      {access?.restore === "email" ? <RestoreForm /> : null}
       <button
         className="text-button"
         type="button"
@@ -276,18 +288,6 @@ function Paywall({ access, message }: { access: AccessView | null; message: stri
       >
         {NOT_NOW}
       </button>
-      {typeof remaining === "number" ? (
-        <div className="founding-choice">
-          <p>{FOUNDING_LEAD}</p>
-          <p>{remaining === 1 ? "1 spot left" : `${remaining} spots left`}</p>
-          <button className="text-button" type="button" disabled={busy} onClick={() => go("founding")}>
-            {CONTINUE_FOUNDING}
-          </button>
-        </div>
-      ) : null}
-      {note ? <p>{note}</p> : null}
-      <p>{RESTORE_HELP}</p>
-      {access?.restore === "email" ? <RestoreForm /> : null}
     </div>
   );
 }
