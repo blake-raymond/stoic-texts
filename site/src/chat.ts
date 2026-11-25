@@ -160,8 +160,13 @@ export async function handleChat(request: Request, env: Env, deps: HandlerDeps):
           cached_tokens: result.usage.cachedTokens,
           cache_write_tokens: result.usage.cacheWriteTokens,
           completion_tokens: result.usage.completionTokens,
+          reasoning_tokens: result.usage.reasoningTokens,
+          finish_reason: result.usage.finishReason,
           cost_micro: cost,
         }));
+        if (result.usage.finishReason === "length") {
+          console.warn(JSON.stringify({ message: "chat reply hit max_tokens", completion_tokens: result.usage.completionTokens }));
+        }
         controller.enqueue(encoder.encode("data: [DONE]\n\n"));
         controller.close();
       } catch (error) {
