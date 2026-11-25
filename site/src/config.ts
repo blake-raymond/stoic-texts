@@ -22,8 +22,13 @@ export const CHAT_TEMPERATURE = 0.7;
  */
 export const OPENROUTER_PROVIDER = "claude-on-aws";
 
-/** Caps a reply near the persona's usual length and bounds output cost. */
-export const MAX_OUTPUT_TOKENS = 1200;
+/**
+ * Bounds output cost. On Sonnet this budget covers the model's thinking AND the
+ * visible reply: a measured 434-word reply used 1,310 tokens (592 of them
+ * thinking), so a 1,200 cap cut replies off mid-sentence. The persona asks
+ * for 250 to 450 words; 4,000 leaves room for thinking plus a long reply.
+ */
+export const MAX_OUTPUT_TOKENS = 4000;
 
 /**
  * One free conversation, counted in assistant replies.
@@ -52,7 +57,7 @@ export const CACHED_REPLY_MICRO_USD = 44_000;
  * real cost. A cold cache re-bills the whole prompt. Listed prices for
  * claude-sonnet-5.5 (per token): input $0.000002, 1-hour cache write $0.000004
  * (2x input), cache read $0.0000001, output $0.00001.
- * 308_000 * $0.000004 = $1.232 write, plus 1_200 output tokens = $0.012.
+ * 308_000 * $0.000004 = $1.232 write, plus 4_000 output tokens = $0.04.
  * $1.40 covers that cold reply. The breakpoint asks for a 1-hour TTL.
  */
 export const COLD_REPLY_RESERVE_MICRO_USD = 1_400_000;

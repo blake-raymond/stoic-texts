@@ -107,3 +107,22 @@ test("the assembled prompt is the cached prefix when it has been built", () => {
   assert.equal(system.content[0].text, prompt);
   assert.equal(JSON.stringify(system).includes("A private trouble"), false);
 });
+
+test("the sse reader reports finish_reason and thinking tokens", async () => {
+  const body = [
+    `data: ${JSON.stringify({ choices: [{ delta: { content: "Cut" } }] })}`,
+    `data: ${JSON.stringify({ choices: [{ delta: { content: "" }, finish_reason: "length" }] })}`,
+    `data: ${JSON.stringify({ choices: [], usage: { completion_tokens: 1200, completion_tokens_details: { reasoning_tokens: 592 } } })}`,
+    "data: [DONE]",
+    "",
+  ].join("\n\n");
+  const stream = new Response(body).body!;
+  const result = await consumeOpenRouterSse(stream, () => {});
+  assert.equal(result.text, "Cut");
+  assert.equal(result.usage.finishReason, "length");
+  assert.equal(result.usage.reasoningTokens, 592);
+});
+
+test("the output budget leaves room for thinking plus a full reply", () => {
+  assert.ok(buildChatRequest("x", [{ role: "user", content: "hi" }]).max_tokens >= 3000);
+});

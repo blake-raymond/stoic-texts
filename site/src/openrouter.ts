@@ -126,6 +126,8 @@ export interface StreamUsage {
   completionTokens: number | null;
   cachedTokens: number | null;
   cacheWriteTokens: number | null;
+  reasoningTokens: number | null;
+  finishReason: string | null;
 }
 
 function numberOrNull(value: unknown): number | null {
@@ -155,6 +157,8 @@ export async function consumeOpenRouterSse(
     completionTokens: null,
     cachedTokens: null,
     cacheWriteTokens: null,
+    reasoningTokens: null,
+    finishReason: null,
   };
   const take = (chunk: string, flush: boolean) => {
     buffer += chunk;
@@ -174,13 +178,14 @@ export async function consumeOpenRouterSse(
       if (!parsed || typeof parsed !== "object") continue;
       const record = parsed as {
         error?: { message?: unknown };
-        choices?: Array<{ delta?: { content?: unknown } }>;
+        choices?: Array<{ delta?: { content?: unknown }; finish_reason?: unknown }>;
         usage?: {
           cost?: unknown;
           prompt_tokens?: unknown;
           completion_tokens?: unknown;
           cache_creation_input_tokens?: unknown;
           prompt_tokens_details?: { cached_tokens?: unknown; cache_write_tokens?: unknown };
+          completion_tokens_details?: { reasoning_tokens?: unknown };
         };
       };
       if (record.error) {
@@ -192,6 +197,8 @@ export async function consumeOpenRouterSse(
         text += piece;
         onDelta(piece);
       }
+      const finish = record.choices?.[0]?.finish_reason;
+      if (typeof finish === "string" && finish) usage.finishReason = finish;
       if (record.usage) {
         const cost = numberOrNull(record.usage.cost);
         if (cost !== null && cost >= 0) usage.costMicro = Math.round(cost * 1_000_000);
@@ -201,6 +208,7 @@ export async function consumeOpenRouterSse(
         usage.cachedTokens = numberOrNull(details?.cached_tokens);
         usage.cacheWriteTokens = numberOrNull(details?.cache_write_tokens)
           ?? numberOrNull(record.usage.cache_creation_input_tokens);
+        usage.reasoningTokens = numberOrNull(record.usage.completion_tokens_details?.reasoning_tokens);
       }
     }
   };
